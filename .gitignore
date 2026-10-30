@@ -1,0 +1,7 @@
+# Verification captures from the anatomy skill (each figure's shots/ folder).
+# The home page card uses <figure-id>/preview.png, which stays tracked.
+shots/
+
+# Local Netlify CLI state and OS files.
+.netlify/
+.DS_Store

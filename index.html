@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anatomy Docs</title>
+<meta name="description" content="Những hình isometric tương tác giải thích khái niệm kỹ thuật bằng những cỗ máy có thật.">
+<style>
+:root {
+  color-scheme: light;
+  --page: #f2f2ef;
+  --card: #fbfbfa;
+  --text: #57575a;
+  --strong: #18181a;
+  --muted: #8c8c90;
+  --line: #d4d4d6;
+  --hi: #26262a;
+  --mid: #8a8a8f;
+  --lo: #b4b4b8;
+  --faint: #d4d4d6;
+  --top: #ffffff;
+  --side-x: #f4f4f1;
+  --side-y: #e5e5e2;
+  --lit-top: #ffffff;
+  --lit: #000000;
+  --halo: #8a8a80;
+  --halo-opacity: .32;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --label: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --page: #0b0b0b;
+    --card: #131313;
+    --text: #a3a3a3;
+    --strong: #e6e6e6;
+    --muted: #6e6e6e;
+    --line: #2a2a2a;
+    --hi: #d4d4d4;
+    --mid: #6a6a6a;
+    --lo: #3e3e3e;
+    --faint: #2a2a2a;
+    --top: #1c1c1c;
+    --side-x: #181818;
+    --side-y: #121212;
+    --lit-top: #262626;
+    --lit: #ffffff;
+    --halo: #050505;
+    --halo-opacity: .9;
+  }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--text);
+  font: 16px/1.6 var(--sans);
+}
+a { color: inherit; }
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+
+/* Header */
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 0;
+  font: 12px/1 var(--mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.top .mark { color: var(--strong); text-decoration: none; }
+.top nav { font-family: var(--label); font-size: 12.5px; }
+.top nav { display: flex; gap: 20px; }
+.top nav a { color: var(--muted); text-decoration: none; }
+.top nav a:hover, .top nav a:focus-visible { color: var(--strong); }
+
+/* Intro */
+.intro { padding: 40px 0 28px; max-width: 680px; }
+.intro .eyebrow {
+  margin: 0 0 16px;
+  color: var(--muted);
+  font: 500 12.5px/1.4 var(--label);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 0 0 18px;
+  color: var(--strong);
+  font-size: clamp(30px, 5vw, 46px);
+  line-height: 1.12;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  text-wrap: balance;
+}
+.intro p { margin: 0; font-size: 17px; text-wrap: pretty; }
+
+/* A plate in the figures' own card style: four mono corner labels */
+.plate {
+  position: relative;
+  background: var(--card);
+  box-shadow: 0 0 0 1px var(--mid);
+  padding: 52px 20px;
+}
+.corner {
+  position: absolute;
+  color: var(--muted);
+  font: 10.5px/1 var(--mono);
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+.corner.fig { top: 18px; left: 20px; color: var(--text); }
+.corner.title { top: 18px; right: 20px; font-family: var(--label); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; }
+.corner.hint { bottom: 18px; left: 20px; font-family: var(--label); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; }
+.corner.readout { bottom: 18px; right: 20px; color: var(--text); font-variant-numeric: tabular-nums; }
+
+.hero-svg { display: block; width: 100%; max-width: 620px; height: auto; margin: 0 auto; overflow: visible; }
+.hero-svg path, .hero-svg ellipse, .hero-svg circle { vector-effect: non-scaling-stroke; stroke-linejoin: round; stroke-linecap: round; }
+.hero-svg .halo { fill: var(--halo); opacity: var(--halo-opacity); stroke: none; }
+.hero-svg .t { fill: var(--top); stroke: var(--hi); stroke-width: 1; }
+.hero-svg .sx { fill: var(--side-x); stroke: var(--hi); stroke-width: 1; }
+.hero-svg .sy { fill: var(--side-y); stroke: var(--hi); stroke-width: 1; }
+.hero-svg .t.lit { fill: var(--lit-top); stroke: var(--lit); }
+.hero-svg .sx.lit, .hero-svg .sy.lit { stroke: var(--lit); }
+.hero-svg .groove { fill: none; stroke: var(--faint); stroke-width: 1; }
+.hero-svg .strip { fill: var(--top); stroke: var(--lo); stroke-width: 1; }
+.hero-svg .tick { fill: none; stroke: var(--lo); stroke-width: 1; }
+.hero-svg .tick.major { stroke: var(--mid); }
+.hero-svg .faint { fill: none; stroke: var(--faint); stroke-width: 1; }
+.hero-svg .window { fill: none; stroke: var(--lo); stroke-width: 1; }
+.hero-svg .lit-window { stroke: var(--hi); }
+.hero-svg .rule { fill: none; stroke: var(--lo); stroke-width: 1.4; }
+.hero-svg .tag { fill: var(--mid); }
+.hero-svg .lit-tag { fill: var(--lit); }
+.hero-svg .screw-ring { fill: var(--top); stroke: var(--mid); stroke-width: 1; }
+.hero-svg .screw { fill: var(--hi); }
+
+/* Sections */
+section { padding: 56px 0 8px; scroll-margin-top: 8px; }
+h2 {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0 0 22px;
+  color: var(--strong);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -.01em;
+}
+h2 .count { color: var(--muted); font: 12px/1 var(--mono); letter-spacing: .04em; }
+
+/* Figure list */
+.figures {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 28px 24px;
+}
+.figures a { display: block; text-decoration: none; }
+.figures .plate { padding: 44px 16px; transition: box-shadow .2s ease; }
+.figures a:hover .plate, .figures a:focus-visible .plate { box-shadow: 0 0 0 1px var(--hi); }
+.figures a:focus-visible { outline: none; }
+.figures .corner.fig, .figures .corner.title { top: 16px; }
+.figures .corner.fig { left: 16px; }
+.figures .corner.title { right: 16px; max-width: calc(100% - 80px); overflow: hidden; text-overflow: ellipsis; }
+.figures .corner.hint, .figures .corner.readout { bottom: 16px; }
+.figures .corner.hint { left: 16px; }
+.figures .corner.readout { right: 16px; }
+.figures img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: contain; }
+.figures p { margin: 12px 2px 0; font-size: 14px; line-height: 1.55; color: var(--text); }
+.empty { display: none; }
+.figures:not(:has(li)) { display: none; }
+.figures:not(:has(li)) + .empty { display: block; }
+.empty .plate { box-shadow: none; border: 1px dashed var(--lo); background: transparent; text-align: center; padding: 64px 20px; }
+.empty p { margin: 0 auto; max-width: 440px; font-size: 15px; }
+
+/* How to view */
+.how { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 0; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+.how li { padding: 20px 20px 22px 0; border-bottom: 1px solid var(--line); }
+.how h3 { margin: 0 0 8px; color: var(--strong); font: 600 12.5px/1.3 var(--label); letter-spacing: .1em; text-transform: uppercase; }
+.how p { margin: 0; font-size: 15px; }
+kbd { font: 12px/1 var(--mono); padding: 2px 5px; border: 1px solid var(--lo); border-bottom-width: 2px; border-radius: 3px; color: var(--strong); background: var(--card); }
+
+footer {
+  margin-top: 72px;
+  padding: 22px 0 40px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font: 13px/1.6 var(--label);
+}
+footer a { color: var(--text); }
+
+@media (max-width: 520px) {
+  .intro { padding-top: 20px; }
+  .plate { padding: 48px 12px; }
+  .corner.fig, .corner.hint { left: 12px; }
+  .corner.title, .corner.readout { right: 12px; }
+  .how li { padding-right: 0; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="mark" href="./">Anatomy Docs</a>
+    <nav aria-label="Mục lục">
+      <a href="#figures">Các hình</a>
+      <a href="#how">Cách xem</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="intro">
+      <p class="eyebrow">Hình minh hoạ kỹ thuật</p>
+      <h1>Giải thích kỹ thuật bằng những cỗ máy có thật.</h1>
+      <p>Mỗi hình ở đây biến một khái niệm như một thuật toán, một cơ chế trong hệ thống hay một luồng dữ liệu thành một vật thể bạn có thể chạm vào: một bộ khoá, một đồng hồ đo, một giá đỡ có ray trượt. Cách nó chuyển động chính là lời giải thích, và mọi con số hiện trên hình đều được tính từ cùng một mô hình làm các bộ phận chuyển động.</p>
+    </div>
+
+    <figure class="plate" style="margin:0">
+      <span class="corner fig">Fig 0</span>
+      <span class="corner title">Bộ sưu tập</span>
+      <span class="corner hint">Chọn một hình bên dưới</span>
+      <span class="corner readout" id="hero-count"></span>
+      <svg class="hero-svg" viewBox="-150.8 -34 407.3 274" role="img" aria-label="Một tấm đế có thước đo, trên đó ba tấm hình đứng trong hai thanh ray; tấm phía trước sáng nhất."><defs><filter id="hero-blur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="7"/></filter></defs><path class="halo" filter="url(#hero-blur)" d="M-3.5 8L240.8 149L107.4 226L-136.8 85Z"/><path class="sy" d="M-135.1 69L107.4 209L107.4 218L-135.1 78Z"/><path class="sx" d="M242.5 131L107.4 209L107.4 218L242.5 140Z"/><path class="t" d="M0 -9L242.5 131L107.4 209L-135.1 69Z"/><path class="groove" d="M0 -2L230.4 131L107.4 202L-123 69Z"/><path class="strip" d="M-98.7 68L109.1 188L98.7 194L-109.1 74Z"/><path class="tick major" d="M-104.8 76.5L-97.9 72.5"/><path class="tick" d="M-100.5 79L-97 77"/><path class="tick" d="M-96.1 81.5L-92.7 79.5"/><path class="tick" d="M-91.8 84L-88.3 82"/><path class="tick" d="M-87.5 86.5L-84 84.5"/><path class="tick major" d="M-83.1 89L-76.2 85"/><path class="tick" d="M-78.8 91.5L-75.3 89.5"/><path class="tick" d="M-74.5 94L-71 92"/><path class="tick" d="M-70.1 96.5L-66.7 94.5"/><path class="tick" d="M-65.8 99L-62.4 97"/><path class="tick major" d="M-61.5 101.5L-54.6 97.5"/><path class="tick" d="M-57.2 104L-53.7 102"/><path class="tick" d="M-52.8 106.5L-49.4 104.5"/><path class="tick" d="M-48.5 109L-45 107"/><path class="tick" d="M-44.2 111.5L-40.7 109.5"/><path class="tick major" d="M-39.8 114L-32.9 110"/><path class="tick" d="M-35.5 116.5L-32 114.5"/><path class="tick" d="M-31.2 119L-27.7 117"/><path class="tick" d="M-26.8 121.5L-23.4 119.5"/><path class="tick" d="M-22.5 124L-19.1 122"/><path class="tick major" d="M-18.2 126.5L-11.3 122.5"/><path class="tick" d="M-13.9 129L-10.4 127"/><path class="tick" d="M-9.5 131.5L-6.1 129.5"/><path class="tick" d="M-5.2 134L-1.7 132"/><path class="tick" d="M-0.9 136.5L2.6 134.5"/><path class="tick major" d="M3.5 139L10.4 135"/><path class="tick" d="M7.8 141.5L11.3 139.5"/><path class="tick" d="M12.1 144L15.6 142"/><path class="tick" d="M16.5 146.5L19.9 144.5"/><path class="tick" d="M20.8 149L24.2 147"/><path class="tick major" d="M25.1 151.5L32 147.5"/><path class="tick" d="M29.4 154L32.9 152"/><path class="tick" d="M33.8 156.5L37.2 154.5"/><path class="tick" d="M38.1 159L41.6 157"/><path class="tick" d="M42.4 161.5L45.9 159.5"/><path class="tick major" d="M46.8 164L53.7 160"/><path class="tick" d="M51.1 166.5L54.6 164.5"/><path class="tick" d="M55.4 169L58.9 167"/><path class="tick" d="M59.8 171.5L63.2 169.5"/><path class="tick" d="M64.1 174L67.5 172"/><path class="tick major" d="M68.4 176.5L75.3 172.5"/><path class="tick" d="M72.7 179L76.2 177"/><path class="tick" d="M77.1 181.5L80.5 179.5"/><path class="tick" d="M81.4 184L84.9 182"/><path class="tick" d="M85.7 186.5L89.2 184.5"/><path class="tick major" d="M90.1 189L97 185"/><path class="tick" d="M94.4 191.5L97.9 189.5"/><ellipse class="screw-ring" cx="0" cy="5" rx="3.2" ry="1.85"/><circle class="screw" cx="0" cy="5" r="0.9"/><ellipse class="screw-ring" cx="218.2" cy="131" rx="3.2" ry="1.85"/><circle class="screw" cx="218.2" cy="131" r="0.9"/><ellipse class="screw-ring" cx="107.4" cy="195" rx="3.2" ry="1.85"/><circle class="screw" cx="107.4" cy="195" r="0.9"/><ellipse class="screw-ring" cx="-110.9" cy="69" rx="3.2" ry="1.85"/><circle class="screw" cx="-110.9" cy="69" r="0.9"/><path class="sy" d="M-5.2 30L31.2 51L31.2 59L-5.2 38Z"/><path class="sx" d="M41.6 45L31.2 51L31.2 59L41.6 53Z"/><path class="t" d="M5.2 24L41.6 45L31.2 51L-5.2 30Z"/><path class="faint" d="M0 27L36.4 48"/><path class="sy" d="M-62.4 63L-26 84L-26 92L-62.4 71Z"/><path class="sx" d="M-15.6 78L-26 84L-26 92L-15.6 86Z"/><path class="t" d="M-52 57L-15.6 78L-26 84L-62.4 63Z"/><path class="faint" d="M-57.2 60L-20.8 81"/><path class="sy" d="M-34.6 28L-30.3 30.5L-30.3 97.5L-34.6 95Z"/><path class="sx" d="M52.8 -17.5L-30.3 30.5L-30.3 97.5L52.8 49.5Z"/><path class="t" d="M48.5 -20L52.8 -17.5L-30.3 30.5L-34.6 28Z"/><path class="window" d="M42.4 2.5L-19.9 38.5L-19.9 66.5L42.4 30.5Z"/><path class="rule" d="M42.4 36.5L-2.6 62.5"/><path class="rule" d="M42.4 41.5L11.3 59.5"/><path class="rule" d="M42.4 46.5L4.3 68.5"/><circle class="tag" cx="-16.5" cy="29.5" r="1.4"/><path class="sy" d="M35.5 53.5L77.9 78L77.9 86L35.5 61.5Z"/><path class="sx" d="M88.3 72L77.9 78L77.9 86L88.3 80Z"/><path class="t" d="M45.9 47.5L88.3 72L77.9 78L35.5 53.5Z"/><path class="faint" d="M40.7 50.5L83.1 75"/><path class="sy" d="M-21.7 86.5L20.8 111L20.8 119L-21.7 94.5Z"/><path class="sx" d="M31.2 105L20.8 111L20.8 119L31.2 113Z"/><path class="t" d="M-11.3 80.5L31.2 105L20.8 111L-21.7 86.5Z"/><path class="faint" d="M-16.5 83.5L26 108"/><path class="sy" d="M12.1 55L16.5 57.5L16.5 124.5L12.1 122Z"/><path class="sx" d="M99.6 9.5L16.5 57.5L16.5 124.5L99.6 76.5Z"/><path class="t" d="M95.3 7L99.6 9.5L16.5 57.5L12.1 55Z"/><path class="window" d="M89.2 29.5L26.8 65.5L26.8 93.5L89.2 57.5Z"/><path class="rule" d="M89.2 63.5L44.2 89.5"/><path class="rule" d="M89.2 68.5L58 86.5"/><path class="rule" d="M89.2 73.5L51.1 95.5"/><circle class="tag" cx="30.3" cy="56.5" r="1.4"/><path class="sy" d="M82.3 80.5L124.7 105L124.7 113L82.3 88.5Z"/><path class="sx" d="M135.1 99L124.7 105L124.7 113L135.1 107Z"/><path class="t" d="M92.7 74.5L135.1 99L124.7 105L82.3 80.5Z"/><path class="faint" d="M87.5 77.5L129.9 102"/><path class="sy" d="M25.1 113.5L67.5 138L67.5 146L25.1 121.5Z"/><path class="sx" d="M77.9 132L67.5 138L67.5 146L77.9 140Z"/><path class="t" d="M35.5 107.5L77.9 132L67.5 138L25.1 113.5Z"/><path class="faint" d="M30.3 110.5L72.7 135"/><path class="sy lit" d="M58.9 82L63.2 84.5L63.2 151.5L58.9 149Z"/><path class="sx lit" d="M146.4 36.5L63.2 84.5L63.2 151.5L146.4 103.5Z"/><path class="t lit" d="M142 34L146.4 36.5L63.2 84.5L58.9 82Z"/><path class="window lit-window" d="M136 56.5L73.6 92.5L73.6 120.5L136 84.5Z"/><path class="rule" d="M136 90.5L90.9 116.5"/><path class="rule" d="M136 95.5L104.8 113.5"/><path class="rule" d="M136 100.5L97.9 122.5"/><circle class="tag lit-tag" cx="77.1" cy="83.5" r="1.4"/><path class="sy" d="M129 107.5L161.1 126L161.1 134L129 115.5Z"/><path class="sx" d="M171.5 120L161.1 126L161.1 134L171.5 128Z"/><path class="t" d="M139.4 101.5L171.5 120L161.1 126L129 107.5Z"/><path class="faint" d="M134.2 104.5L166.3 123"/><path class="sy" d="M71.9 140.5L103.9 159L103.9 167L71.9 148.5Z"/><path class="sx" d="M114.3 153L103.9 159L103.9 167L114.3 161Z"/><path class="t" d="M82.3 134.5L114.3 153L103.9 159L71.9 140.5Z"/><path class="faint" d="M77.1 137.5L109.1 156"/></svg>
+    </figure>
+
+    <section id="figures" aria-labelledby="figures-title">
+      <h2 id="figures-title">Các hình <span class="count" id="figure-count"></span></h2>
+      <ol class="figures">
+        <!--
+          Mỗi hình là một <li>, xếp theo thứ tự tạo (Fig 1, Fig 2, ...). Mẫu:
+          <li>
+            <a href="./<figure-id>/">
+              <div class="plate">
+                <span class="corner fig">Fig 1</span>
+                <span class="corner title">Tên hình</span>
+                <img src="./<figure-id>/preview.png" alt="Mô tả ngắn những gì hình vẽ" loading="lazy" width="1200" height="900">
+                <span class="corner hint">Mở hình</span>
+                <span class="corner readout">SVG · tương tác</span>
+              </div>
+            </a>
+            <p>Một câu: khái niệm nào, được giải thích bằng cỗ máy nào.</p>
+          </li>
+        -->
+      </ol>
+      <div class="empty">
+        <div class="plate">
+          <p>Chưa có hình nào. Hình đầu tiên sẽ xuất hiện ở đây.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="how" aria-labelledby="how-title">
+      <h2 id="how-title">Cách xem</h2>
+      <ul class="how">
+        <li>
+          <h3>Chuột và chạm</h3>
+          <p>Rê chuột hoặc kéo trên hình để điều khiển bộ phận chính. Khi không ai chạm vào, hình tự chạy một vòng để minh hoạ ý chính.</p>
+        </li>
+        <li>
+          <h3>Bàn phím</h3>
+          <p>Nhấn <kbd>Tab</kbd> để chọn hình, phím mũi tên để đi từng bước, giữ <kbd>Shift</kbd> để đi bước lớn, <kbd>Home</kbd> và <kbd>End</kbd> để về hai đầu.</p>
+        </li>
+        <li>
+          <h3>Số liệu</h3>
+          <p>Góc dưới bên phải mỗi hình là số đọc trực tiếp từ mô hình. Hình đứng yên khi máy bật chế độ giảm chuyển động, và dừng khi bạn cuộn nó ra khỏi màn hình.</p>
+        </li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    Vẽ bằng <a href="https://github.com/wheresryan22/anatomy">Anatomy</a>, một skill mã nguồn mở (MIT) cho Claude Code.
+  </footer>
+</div>
+<script>
+  // Fill the counts from the list so adding a figure needs no other edit.
+  (function () {
+    var n = document.querySelectorAll(".figures > li").length;
+    document.getElementById("figure-count").textContent = n ? String(n).padStart(2, "0") : "";
+    document.getElementById("hero-count").textContent = n + " hình";
+  })();
+</script>
+</body>
+</html>
