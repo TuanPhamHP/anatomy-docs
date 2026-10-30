@@ -71,7 +71,7 @@ footer a { color: var(--text); }
       <h1>Design patterns</h1>
       <p>23 pattern kinh điển của nhóm Gang of Four, chia ba nhóm theo việc chúng giải quyết. Mỗi bài là một cỗ máy tương tác mà cách nó chạy chính là pattern, kèm một bài toán backend quen thuộc, phiên bản code trước và sau khi áp dụng, viết bằng Python và TypeScript, chạy được.</p>
       <ul class="progress">
-        <li><strong>11</strong> / 14 bài của đợt 1 đã có</li>
+        <li><strong>14</strong> / 14 bài của đợt 1 đã có</li>
         <li><span class="stars" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span> hay gặp trong backend</li>
         <li><span class="stars" aria-label="Mức phổ biến 1 trên 3">★<span class="off">★★</span></span> ít gặp</li>
       </ul>
@@ -79,16 +79,28 @@ footer a { color: var(--text); }
     <section id="creational" aria-labelledby="creational-title">
     <h2 id="creational-title">Creational <span>Tạo object</span></h2>
     <p class="blurb">Tách việc tạo object ra khỏi chỗ dùng nó, để đổi cách tạo mà không sửa code gọi.</p>
-    <ul class="cards"><li class="card planned">
-      <div class="head"><span class="name">Factory Method</span><span class="stars" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span></div>
-      <p>Giao việc tạo object cho một hàm hoặc lớp con; code gọi chỉ biết interface.</p>
-      <span class="status">Đợt 1 · sắp có</span></li><li class="card planned">
-      <div class="head"><span class="name">Builder</span><span class="stars" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span></div>
-      <p>Lắp một object phức tạp từng bước, như một query builder.</p>
-      <span class="status">Đợt 1 · sắp có</span></li><li class="card planned">
-      <div class="head"><span class="name">Singleton</span><span class="stars" aria-label="Mức phổ biến 2 trên 3">★★<span class="off">★</span></span></div>
-      <p>Chỉ một instance cho cả hệ thống; ngày nay thường để DI container lo, và dễ thành anti-pattern.</p>
-      <span class="status">Đợt 1 · sắp có</span></li><li class="card planned">
+    <ul class="cards"><li class="card ready"><a href="./factory-method/">
+      <div class="plate">
+        <span class="corner title">Factory Method</span>
+        <img src="./factory-method/preview.png" alt="Hình tương tác của Factory Method" loading="lazy" width="1086" height="765">
+        <span class="corner hint">Mở bài</span>
+        <span class="corner readout"><span class="stars" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span></span>
+      </div></a>
+      <p>Giao việc tạo object cho một hàm hoặc lớp con; code gọi chỉ biết interface.</p></li><li class="card ready"><a href="./builder/">
+      <div class="plate">
+        <span class="corner title">Builder</span>
+        <img src="./builder/preview.png" alt="Hình tương tác của Builder" loading="lazy" width="1086" height="819">
+        <span class="corner hint">Mở bài</span>
+        <span class="corner readout"><span class="stars" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span></span>
+      </div></a>
+      <p>Lắp một object phức tạp từng bước, như một query builder.</p></li><li class="card ready"><a href="./singleton/">
+      <div class="plate">
+        <span class="corner title">Singleton</span>
+        <img src="./singleton/preview.png" alt="Hình tương tác của Singleton" loading="lazy" width="1086" height="693">
+        <span class="corner hint">Mở bài</span>
+        <span class="corner readout"><span class="stars" aria-label="Mức phổ biến 2 trên 3">★★<span class="off">★</span></span></span>
+      </div></a>
+      <p>Chỉ một instance cho cả hệ thống; ngày nay thường để DI container lo, và dễ thành anti-pattern.</p></li><li class="card planned">
       <div class="head"><span class="name">Abstract Factory</span><span class="stars" aria-label="Mức phổ biến 2 trên 3">★★<span class="off">★</span></span></div>
       <p>Tạo cả một họ object luôn đi cùng nhau.</p>
       <span class="status">Đợt 2</span></li><li class="card planned">

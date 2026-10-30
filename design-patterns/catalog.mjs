@@ -24,9 +24,9 @@ export const GROUPS = [
 ];
 
 export const PATTERNS = [
-  { slug: "factory-method", name: "Factory Method", group: "creational", stars: 3, wave: 1, summary: "Giao việc tạo object cho một hàm hoặc lớp con; code gọi chỉ biết interface." },
-  { slug: "builder", name: "Builder", group: "creational", stars: 3, wave: 1, summary: "Lắp một object phức tạp từng bước, như một query builder." },
-  { slug: "singleton", name: "Singleton", group: "creational", stars: 2, wave: 1, summary: "Chỉ một instance cho cả hệ thống; ngày nay thường để DI container lo, và dễ thành anti-pattern." },
+  { slug: "factory-method", name: "Factory Method", group: "creational", stars: 3, wave: 1, ready: true, summary: "Giao việc tạo object cho một hàm hoặc lớp con; code gọi chỉ biết interface." },
+  { slug: "builder", name: "Builder", group: "creational", stars: 3, wave: 1, ready: true, summary: "Lắp một object phức tạp từng bước, như một query builder." },
+  { slug: "singleton", name: "Singleton", group: "creational", stars: 2, wave: 1, ready: true, summary: "Chỉ một instance cho cả hệ thống; ngày nay thường để DI container lo, và dễ thành anti-pattern." },
   { slug: "abstract-factory", name: "Abstract Factory", group: "creational", stars: 2, wave: 2, summary: "Tạo cả một họ object luôn đi cùng nhau." },
   { slug: "prototype", name: "Prototype", group: "creational", stars: 1, wave: 2, summary: "Tạo object mới bằng cách clone một mẫu có sẵn." },
 
