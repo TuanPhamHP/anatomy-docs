@@ -11,7 +11,7 @@ def shipping_fee(rule: str, order: dict) -> int:
     elif rule == "free_over_300k":
         return 0 if order["subtotal"] >= 300000 else 20000
     else:
-        raise ValueError(f"Chưa hỗ trợ cách tính {rule}")  # thêm cách tính = sửa hàm này
+        raise ValueError(f"Chưa hỗ trợ cách tính {rule}")  # thêm cách tính nào cũng phải sửa hàm này
 
 
 def checkout_total(rule: str, order: dict) -> int:

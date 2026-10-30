@@ -255,7 +255,7 @@ export const svg = k.figureSvg({
   width: WIDTH,
   height: HEIGHT,
   label:
-    "Một máy tính phí giao hàng kiểu cam. Giữa bệ là một trục đứng có then; phía sau là cần đọc có lò xo, đầu cần là con lăn tì vào mép cam, nối với đồng hồ và ô số trên hộp. Bên trái có ba trụ, mỗi trụ giữ một cam: cùng lỗ trục và rãnh then nhưng biên dạng khác nhau, mỗi cam là một cách tính phí. Khi chọn cách tính, cần đọc lùi ra, cam đang lắp về trụ của nó, cam được chọn hạ xuống trục, trục quay tới giá trị đơn hàng ghi trên cam đó và cần đọc chỉ ra phí.",
+    "Một máy tính phí giao hàng dùng cam. Giữa bệ là một trục đứng có then, phía sau là cần đọc có lò xo với con lăn tì vào mép cam, nối tới đồng hồ và ô số trên hộp. Bên trái có ba trụ giữ ba cam, mỗi cam là một cách tính phí, cùng lỗ trục và rãnh then nhưng khác biên dạng. Khi chọn cách tính, cần đọc lùi ra, cam cũ về trụ, cam mới hạ xuống trục, rồi trục quay tới giá trị của đơn hàng để cần đọc chỉ ra phí.",
   body: [
     base(),
     ...backPosts,
@@ -326,7 +326,7 @@ const rimAt = (m) => radii[m](CAM.READ - theta);
 function describe() {
   const s = STRATEGIES[sel];
   stage.setAttribute("aria-valuenow", String(sel + 1));
-  stage.setAttribute("aria-valuetext", s.name + ": " + valueText(s) + " cho phí " + groupVND(fees[sel]) + " đồng");
+  stage.setAttribute("aria-valuetext", s.name + ", đọc " + valueText(s) + ", phí " + groupVND(fees[sel]) + " đồng");
   emit();
 }
 // Tell the step controls under the card which step is showing and whether the tour runs.
@@ -488,7 +488,7 @@ const reads = { kg: "cân nặng", km: "quãng đường", "₫": "tiền hàng"
 const steps = STRATEGIES.map((s) => ({
   label: s.name,
   short: s.short,
-  caption: `<code>${s.cls}</code> đọc ${reads[s.unit]} <code>${valueText(s)}</code>: ${s.rule}. Phí: <strong>${groupVND(quote(s))} ₫</strong>.`,
+  caption: `Lắp cam <code>${s.cls}</code> thì máy đọc ${reads[s.unit]} ${valueText(s)}. ${s.rule}, nên phí là <strong>${groupVND(quote(s))} ₫</strong>.`,
 }));
 export const plate = withSteps(k.plateHtml({
   fig: "Fig 2",
@@ -496,13 +496,13 @@ export const plate = withSteps(k.plateHtml({
   hint: "Rê chuột để chọn cách tính phí",
   readout: `${first.short} · ${valueText(first)} → ${groupVND(quote(first))} ₫`,
   keys: [
-    { mark: "lit", label: "Cam đang lắp trên trục: cách tính phí đang dùng" },
-    { mark: "raised", label: "Cam trên trụ: các cách tính khác, cùng lỗ trục và rãnh then" },
+    { mark: "lit", label: "Cam đang lắp trên trục, tức cách tính phí đang dùng" },
+    { mark: "raised", label: "Các cam trên trụ chờ là những cách tính còn lại, cùng lỗ trục và rãnh then" },
   ],
   caption:
-    "Máy chỉ có một trục có then và một cần đọc, và hai thứ đó không bao giờ đổi. Mỗi cách tính phí là một cam: lỗ trục và rãnh then giống hệt nhau, chỉ có biên dạng là khác. Lắp cam nào thì trục quay tới giá trị của đơn hàng mà cam đó đọc (3,5 kg, 12 km hay 450.000 ₫); con lăn tì lên mép cam, nên mép cam nhô ra bao nhiêu thì phí bấy nhiêu. Thêm một cách tính mới chỉ là tiện thêm một cam.",
-  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Strategy: phím mũi tên để chọn cách tính phí" aria-valuemin="1" aria-valuemax="${STRATEGIES.length}" aria-valuenow="${START + 1}">${svg}</div>`,
-}), stepsHtml({ label: "Các bước: chọn cách tính phí", steps, start: START }));
+    "Máy chỉ có một trục có then và một cần đọc, và hai bộ phận này không bao giờ thay đổi. Mỗi cách tính phí là một cam có cùng lỗ trục và rãnh then, chỉ khác nhau ở biên dạng, nên lắp cam nào lên thì con lăn đọc ra phí theo đúng mép cam đó. Muốn thêm một cách tính mới, ta chỉ cần tiện thêm một cam.",
+  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Máy tính phí, dùng phím mũi tên để chọn cách tính" aria-valuemin="1" aria-valuemax="${STRATEGIES.length}" aria-valuenow="${START + 1}">${svg}</div>`,
+}), stepsHtml({ label: "Chọn cách tính phí", steps, start: START }));
 
 export const FIGURE_CSS = `
 .dp-screen{fill:var(--anatomy-shade-1)}

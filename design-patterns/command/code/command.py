@@ -1,4 +1,4 @@
-"""Command: gói mỗi thao tác kho thành một object để xếp hàng, ghi lịch sử và hoàn tác.
+"""Command: gói mỗi thao tác kho thành một đối tượng để xếp hàng, ghi lịch sử và hoàn tác.
 
 Chạy: python3 command.py
 """

@@ -321,7 +321,7 @@ export const svg = k.figureSvg({
   width: WIDTH,
   height: HEIGHT,
   label:
-    "Một máy ép để bàn đứng trên một khối nguồn tỷ giá. Khối nguồn có một đầu ren trên đỉnh; các vòng LOG, RETRY, CACHE đều có cùng kiểu ren ở mặt dưới và mặt trên, nên vòng nào cũng vặn được lên khối nguồn hoặc lên một vòng khác. Các vòng chưa dùng nằm trên giá bên cạnh. Mỗi vòng có một ô số riêng: số dòng log, số lần thử, giá trị đã nhớ. Khi bấm nút, trục ép đi xuống qua từng vòng tới khối nguồn rồi quay lên.",
+    "Một máy ép để bàn đứng trên khối nguồn tỷ giá. Trên đỉnh khối nguồn có một đầu ren, và các vòng LOG, RETRY, CACHE đều có đúng kiểu ren ấy ở cả mặt dưới lẫn mặt trên, nên vòng nào cũng vặn được lên khối nguồn hoặc lên một vòng khác. Các vòng chưa dùng nằm trên giá bên cạnh. Mỗi vòng có một ô số riêng cho số dòng log, số lần thử hoặc giá trị đã nhớ. Khi bấm nút, trục ép đi xuống qua từng vòng tới khối nguồn rồi quay lên.",
   body: [
     base(),
     apiBox(),
@@ -374,7 +374,7 @@ const emit = () => stage.dispatchEvent(new CustomEvent("dp:state", { detail: { i
 function describe() {
   const step = STEPS[sel], t = runs[sel].totals;
   stage.setAttribute("aria-valuenow", String(sel + 1));
-  stage.setAttribute("aria-valuetext", "Bước " + (sel + 1) + ": " + stackName(step.rings) + ", " + step.calls + " lần gọi, API được gọi " + t.api + " lần");
+  stage.setAttribute("aria-valuetext", "Bước " + (sel + 1) + ", " + stackName(step.rings) + ", " + step.calls + " lần gọi, API bị gọi " + t.api + " lần");
   emit();
 }
 
@@ -556,11 +556,12 @@ const steps = STEPS.map((step, index) => {
   const run = simulate(index);
   const t = run.totals;
   const rate = `<strong>${groupVND(RATE)} ₫</strong>`;
+  const n = (count) => ["không", "một", "hai", "ba", "bốn", "năm"][count] ?? String(count);
   const captions = [
-    `<code>HttpRateSource</code> trần: lời gọi <code>get_rate("${PAIR}")</code> đi thẳng xuống khối nguồn, API trả ${rate}. Gọi API <strong>${t.api}</strong> lần.`,
-    `Vặn vòng LOG lên: <code>LoggingSource(api)</code> vẫn có đúng hàm <code>get_rate()</code>. Lời gọi đi qua LOG xuống API rồi quay lên, LOG ghi <strong>${t.log}</strong> dòng; API vẫn chỉ <strong>${t.api}</strong> lần.`,
-    `Vặn thêm vòng RETRY: <code>RetrySource(LoggingSource(api))</code>. API lỗi lần đầu, RETRY cho lời gọi chạy lại: <strong>${t.tries}</strong> lần thử, LOG ghi <strong>${t.log}</strong> dòng (một lỗi, một thành công), gọi API <strong>${t.api}</strong> lần.`,
-    `Vặn vòng CACHE lên trên cùng: <code>CachingSource(...)</code>. Gọi ${step.calls} lần: lần đầu đi hết xuống API, lần sau CACHE trả luôn ${rate}, cờ bật. ${step.calls} lần gọi, API chỉ <strong>${t.api}</strong> lần.`,
+    `Lúc đầu chỉ có <code>HttpRateSource</code>, nên lời gọi đi thẳng xuống khối nguồn và API trả về ${rate}. API bị gọi đúng ${n(t.api)} lần.`,
+    `Ta vặn thêm vòng LOG. Vòng này vẫn có đúng phương thức <code>get_rate()</code>, nên lời gọi đi qua LOG xuống API rồi quay lên. LOG ghi được ${n(t.log)} dòng, còn API vẫn chỉ bị gọi ${n(t.api)} lần.`,
+    `Ta vặn thêm vòng RETRY. Lần đầu API lỗi, RETRY cho lời gọi chạy lại và lần này thành công, nên có ${n(t.tries)} lần thử, LOG ghi ${n(t.log)} dòng và API bị gọi ${n(t.api)} lần.`,
+    `Vòng CACHE nằm trên cùng. Lần gọi đầu đi hết xuống API, lần thứ hai CACHE trả luôn ${rate} và cờ bật lên, nên ${n(step.calls)} lần gọi mà API chỉ bị gọi ${n(t.api)} lần.`,
   ];
   return {
     label: index === 0 ? "API trần" : `Thêm ${LAYERS[step.rings - 1].label}`,
@@ -575,13 +576,13 @@ export const plate = withSteps(k.plateHtml({
   hint: "Bấm vào hình để sang bước sau",
   readout: `${STEPS[START].calls} lần gọi → API ${startSnap.api} lần`,
   keys: [
-    { mark: "lit", label: "Vòng đang giữ lời gọi; lúc nghỉ là vòng ngoài cùng, thứ mà client cầm" },
-    { mark: "raised", label: "Ba vòng từ dưới lên: LOG, RETRY, CACHE; cùng một kiểu ren ở hai mặt" },
+    { mark: "lit", label: "Vòng đang giữ lời gọi. Lúc nghỉ, đó là vòng ngoài cùng, tức thứ mà client đang cầm" },
+    { mark: "raised", label: "Ba vòng LOG, RETRY và CACHE xếp từ dưới lên, hai mặt vòng nào cũng cùng một kiểu ren" },
   ],
   caption:
-    "Khối nguồn gọi API thật và không bao giờ bị sửa. Mỗi vòng có ren dưới khớp với ren trên của khối nguồn, và ở trên lại có đúng ren đó, nên vòng nào cũng vặn được lên khối hay lên vòng khác, theo thứ tự tuỳ chọn. Trục ép là một lời gọi: nó đi xuống qua từng vòng, mỗi vòng làm thêm đúng một việc rồi cho đi tiếp hoặc tự trả lời.",
-  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Decorator: phím mũi tên để chuyển bước, Enter để chạy lại" aria-valuemin="1" aria-valuemax="${STEPS.length}" aria-valuenow="${START + 1}">${svg}</div>`,
-}), stepsHtml({ label: "Các bước: bọc thêm từng lớp", steps, start: START }));
+    "Khối nguồn gọi API thật và không bao giờ bị sửa. Vòng nào cũng có ren dưới khớp với ren trên của khối nguồn, phía trên lại có đúng kiểu ren đó, nên bạn vặn chúng chồng lên nhau theo thứ tự nào cũng được. Trục ép tượng trưng cho một lời gọi. Nó đi xuống qua từng vòng, mỗi vòng làm thêm đúng một việc rồi cho đi tiếp, hoặc tự trả lời luôn.",
+  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Decorator, dùng phím mũi tên để chuyển bước, Enter để chạy lại" aria-valuemin="1" aria-valuemax="${STEPS.length}" aria-valuenow="${START + 1}">${svg}</div>`,
+}), stepsHtml({ label: "Bọc thêm từng lớp", steps, start: START }));
 
 export const FIGURE_CSS = `
 .dc-screen{fill:var(--anatomy-shade-1)}

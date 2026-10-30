@@ -14,7 +14,7 @@ import * as G from "/home/tuanpham/.claude/skills/anatomy/kit/lathe.mjs";
 import { kitScript } from "/home/tuanpham/.claude/skills/anatomy/scripts/inline-kit.mjs";
 import { stepsHtml, withSteps } from "../_shared/page.mjs";
 import { BAR, barBodySvg } from "./bar.mjs";
-import { ORDER, PROGRAM, STEP_STROKE, SUBSYSTEMS, TOTAL, groupVND, lift, lugStart } from "./model.mjs";
+import { ORDER, PROGRAM, STEP_STROKE, SUBSYSTEMS, TOTAL, groupVND, inWords, lift, lugStart } from "./model.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -324,7 +324,7 @@ export const svg = k.figureSvg({
   width: WIDTH,
   height: HEIGHT,
   label:
-    "Một bàn máy đặt hàng. Bên trái là tủ facade với đúng một nút bấm lớn và cửa sổ hiện mã đơn. Một thanh chương trình chạy ra từ cổng của tủ, dưới năm khối hệ con xếp hàng: kho, thanh toán, vận chuyển, hoá đơn, thông báo. Khi nhấn nút, tủ kéo thanh vào; năm vấu trên thanh lần lượt nâng cần của từng khối, cờ của khối bật lên và cửa sổ của nó hiện kết quả. Mỗi khối vẫn có núm và cổng bảo trì riêng.",
+    "Một bàn máy đặt hàng. Bên trái là tủ facade có đúng một nút bấm lớn và một cửa sổ hiện mã đơn. Từ cổng của tủ, một thanh chương trình chạy dọc bên dưới năm khối hệ con xếp thành hàng là kho, thanh toán, vận chuyển, hoá đơn và thông báo. Khi nhấn nút, tủ kéo thanh vào, năm vấu trên thanh lần lượt nâng cần của từng khối, cờ của khối bật lên và cửa sổ của nó hiện kết quả. Khối nào cũng vẫn có núm và cổng bảo trì riêng.",
   body: [
     base(),
     ...GUIDES.map(guideBack),
@@ -479,12 +479,12 @@ const steps = [
   {
     label: "Đặt hàng",
     short: "1",
-    caption: `Client chỉ gọi một hàm: <code>checkout.place_order(cart)</code> cho đơn ${ORDER.id}, ${ORDER.qty} × ${ORDER.item}, tổng <strong>${groupVND(TOTAL)} ₫</strong>. Nút được nhấn; phần còn lại nằm trong facade.`,
+    caption: `Client chỉ gọi một hàm <code>checkout.place_order(cart)</code> cho đơn ${ORDER.id}, gồm ${inWords(ORDER.qty)} ${ORDER.item.toLowerCase()}, tổng <strong>${groupVND(TOTAL)} ₫</strong>. Mọi việc còn lại diễn ra bên trong facade.`,
   },
   ...SUBSYSTEMS.map((sub, i) => ({
     label: sub.name,
     short: String(i + 2),
-    caption: `Facade gọi <code>${sub.call}</code>: ${sub.result}.${i === SUBSYSTEMS.length - 1 ? ` Xong năm việc, facade trả kết quả cho client trong cùng một lần gọi.` : ""}`,
+    caption: sub.result(`<code>${sub.call}</code>`),
   })),
 ];
 
@@ -495,13 +495,13 @@ export const plate = withSteps(k.plateHtml({
   hint: "Rê chuột lên từng khối",
   readout: `${first.name} · ${first.readout}`,
   keys: [
-    { mark: "lit", label: "Nút của facade, rồi cờ của hệ con vừa được gọi" },
-    { mark: "raised", label: "Thanh chương trình và cần: thứ tự gọi nằm trong facade" },
+    { mark: "lit", label: "Nút của facade, sau đó là cờ của hệ con vừa được gọi" },
+    { mark: "raised", label: "Thanh chương trình và các cần nâng, nơi facade giữ thứ tự gọi" },
   ],
   caption:
-    "Bên ngoài chỉ có một nút: client gọi place_order và không biết gì thêm. Bên trong, tủ facade kéo thanh chương trình vào; năm vấu trên thanh, mỗi vấu lệch một nhịp, lần lượt nâng cần của kho, thanh toán, vận chuyển, hoá đơn và thông báo, nên thứ tự gọi luôn đúng cho mọi client. Mỗi khối vẫn có núm và cổng bảo trì riêng: cần thì vẫn gọi thẳng được hệ con.",
-  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Facade: phím mũi tên để đi qua từng bước của lệnh đặt hàng" aria-valuemin="1" aria-valuemax="${STEP_STROKE.length}" aria-valuenow="${START + 1}">${svg}</div>`,
-}), stepsHtml({ label: "Các bước: một lệnh đặt hàng đi qua facade", steps, start: START }));
+    "Nhìn từ bên ngoài chỉ có một nút, nên client gọi place_order mà không cần biết gì thêm. Bên trong, tủ facade kéo thanh chương trình vào, và năm vấu lệch nhau từng nhịp lần lượt nâng cần của kho, thanh toán, vận chuyển, hoá đơn rồi thông báo, nhờ vậy thứ tự gọi luôn đúng dù client là ai. Mỗi khối vẫn giữ núm và cổng bảo trì riêng, để khi cần bạn vẫn gọi thẳng được hệ con.",
+  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Facade, dùng phím mũi tên để đi qua từng bước của lệnh đặt hàng" aria-valuemin="1" aria-valuemax="${STEP_STROKE.length}" aria-valuenow="${START + 1}">${svg}</div>`,
+}), stepsHtml({ label: "Một lệnh đặt hàng đi qua facade", steps, start: START }));
 
 export const FIGURE_CSS = `
 .fc-screen{fill:var(--anatomy-shade-1)}

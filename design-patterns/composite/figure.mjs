@@ -400,7 +400,7 @@ export const svg = k.figureSvg({
   width: WIDTH,
   height: HEIGHT,
   label:
-    "Một cân băng tải: ba đoạn băng con lăn, đoạn giữa là bàn cân đặt trên cảm biến lực, bên dưới là tủ cân có mặt đồng hồ kim và màn hình số. Trên băng có ba kiện hàng: một bình gốm, một hộp các-tông đựng bình giữ nhiệt và hộp trà, và một thùng gỗ đựng một hộp như thế, một cuốn sách và một bình gốm. Khi chọn một kiện, băng chạy đưa kiện đó lên bàn cân và kim chỉ khối lượng của nó, dù đó là một món hàng hay một thùng chứa hộp.",
+    "Một cân băng tải gồm ba đoạn băng con lăn. Đoạn giữa là bàn cân đặt trên cảm biến lực, bên dưới có tủ cân với đồng hồ kim và màn hình số. Trên băng có ba kiện hàng: một bình gốm, một hộp các-tông đựng bình giữ nhiệt và hộp trà, và một thùng gỗ đựng một hộp như thế cùng một cuốn sách và một bình gốm. Khi bạn chọn một kiện, băng chạy đưa kiện đó lên bàn cân và kim chỉ khối lượng của nó, dù đó là một món hàng hay một thùng chứa hộp.",
   body: [
     base(),
     stand(STANDS[0]),
@@ -455,7 +455,7 @@ const emit = () => stage.dispatchEvent(new CustomEvent("dp:state", { detail: { i
 function describe() {
   const tree = PARCELS[sel].tree;
   stage.setAttribute("aria-valuenow", String(sel + 1));
-  stage.setAttribute("aria-valuetext", tree.name + ": " + kg(tree.weight()) + " ki-lô-gam");
+  stage.setAttribute("aria-valuetext", tree.name + " nặng " + kg(tree.weight()) + " ki-lô-gam");
   emit();
 }
 function draw() {
@@ -542,11 +542,13 @@ const COUNTED = { "Sách": "một cuốn sách" };
 const counted = (child) => COUNTED[child.name] ?? `một ${child.name.toLowerCase()}`;
 const names = (box) => box.children.map((child) => child.name.toLowerCase());
 const listed = (box) => { const all = box.children.map(counted); return `${all.slice(0, -1).join(", ")} và ${all.at(-1)}`; };
+// The sum in words, so the caption needs no "+": "0,6 kg của bình giữ nhiệt và 0,5 kg của hộp trà".
+const parts = (box) => { const all = box.children.map((child) => `${kg(child.weight())} kg của ${child.name.toLowerCase()}`); return `${all.slice(0, -1).join(", ")} và ${all.at(-1)}`; };
 const [one, small, big] = PARCELS.map((parcel) => parcel.tree);
 const steps = [
-  { label: PARCELS[0].label, short: PARCELS[0].short, caption: `<code>Item("${one.name}")</code> là một món hàng, lá của cây. <code>weight()</code> trả về khối lượng của chính nó: <strong>${kg(one.weight())} kg</strong>.` },
-  { label: PARCELS[1].label, short: PARCELS[1].short, caption: `<code>Box("${small.name}")</code> chứa ${names(small).join(" và ")}. <code>weight()</code> cộng vỏ hộp với từng thứ bên trong: ${small.sum()} = <strong>${kg(small.weight())} kg</strong>.` },
-  { label: PARCELS[2].label, short: PARCELS[2].short, caption: `<code>Box("${big.name}")</code> chứa ${listed(big)}. Hộp con tự cộng phần của nó: ${big.sum()} = <strong>${kg(big.weight())} kg</strong>. Cân vẫn chỉ gọi <code>weight()</code>.` },
+  { label: PARCELS[0].label, short: PARCELS[0].short, caption: `${one.name} là một món hàng lẻ, tức một lá của cây. Khi cân gọi <code>weight()</code>, nó chỉ trả về khối lượng của chính mình: <strong>${kg(one.weight())} kg</strong>.` },
+  { label: PARCELS[1].label, short: PARCELS[1].short, caption: `${small.name} đựng ${names(small).join(" và ")}. Nó cộng vỏ hộp ${kg(small.tare)} kg với ${parts(small)}, được <strong>${kg(small.weight())} kg</strong>.` },
+  { label: PARCELS[2].label, short: PARCELS[2].short, caption: `${big.name} đựng ${listed(big)}. Thùng chỉ hỏi hộp con nặng bao nhiêu rồi cộng với phần còn lại, được <strong>${kg(big.weight())} kg</strong>, và cân vẫn chỉ gọi <code>weight()</code>.` },
 ];
 
 export const plate = withSteps(k.plateHtml({
@@ -555,13 +557,13 @@ export const plate = withSteps(k.plateHtml({
   hint: "Bấm để cân kiện tiếp",
   readout: `${big.name} · ${kg(big.weight())} kg`,
   keys: [
-    { mark: "lit", label: "Kim cân: đọc weight() của thứ đang nằm trên bàn cân" },
-    { mark: "raised", label: "Kiện hàng: một món (Item) hoặc một hộp chứa món và hộp khác (Box)" },
+    { mark: "lit", label: "Kim cân đọc weight() của kiện đang nằm trên bàn cân" },
+    { mark: "raised", label: "Kiện hàng, có thể là một Item lẻ hoặc một Box chứa món hàng và hộp khác" },
   ],
   caption:
-    "Bàn cân không phân biệt thứ đặt lên nó: một bình gốm, một hộp hai món hay một thùng chứa cả hộp lẫn món hàng đều chỉ là một kiện có khối lượng. Thùng tự cộng vỏ của nó với từng thứ bên trong, và hộp bên trong cũng làm y như vậy, nên lồng thêm bao nhiêu tầng thì cân vẫn đọc đúng.",
-  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Composite: phím mũi tên để chọn kiện hàng" aria-valuemin="1" aria-valuemax="3" aria-valuenow="${START + 1}">${svg}</div>`,
-}), stepsHtml({ label: "Các bước: chọn kiện hàng", steps, start: START }));
+    "Bàn cân không phân biệt thứ được đặt lên nó. Một bình gốm, một hộp hai món hay một thùng chứa cả hộp lẫn món hàng đều chỉ là một kiện có khối lượng. Thùng tự cộng vỏ của mình với từng thứ bên trong, hộp nằm trong thùng cũng làm y như vậy, nên dù lồng thêm bao nhiêu tầng thì cân vẫn đọc đúng.",
+  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Composite, dùng phím mũi tên để chọn kiện hàng" aria-valuemin="1" aria-valuemax="3" aria-valuenow="${START + 1}">${svg}</div>`,
+}), stepsHtml({ label: "Chọn kiện hàng để cân", steps, start: START }));
 
 export const FIGURE_CSS = `
 .dp-screen{fill:var(--anatomy-shade-1)}

@@ -46,5 +46,8 @@ export function replay(n) {
   return { stock, queue, history, undone };
 }
 
+// Small counts read as words in captions: "ba phiếu", "còn hai phiếu".
+export const say = (n) => ["không", "một", "hai", "ba", "bốn", "năm"][n] ?? String(n);
+
 // Stock after each step: 100, 150, 130, 115, 130.
 export const STOCK = STEPS.map((_, i) => replay(i).stock);

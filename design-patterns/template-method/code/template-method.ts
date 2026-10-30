@@ -22,7 +22,7 @@ const sum = (rows: Order[]) => rows.reduce((total, order) => total + order.amoun
 abstract class ReportExporter {
   protected extension = "txt";
 
-  // Template method: thứ tự các bước cố định. Lớp con không ghi đè hàm này.
+  // Đây là template method: thứ tự các bước cố định, lớp con không ghi đè hàm này.
   export(): string[] {
     const orders = this.readOrders();
     const rows = this.keepValid(orders);
@@ -36,7 +36,7 @@ abstract class ReportExporter {
     return lines;
   }
 
-  // Các bước dùng chung: viết một lần ở lớp cha.
+  // Các bước dùng chung được viết một lần ở lớp cha.
   protected readOrders(): Order[] {
     return ORDERS; // thực tế: truy vấn cơ sở dữ liệu
   }
@@ -51,10 +51,10 @@ abstract class ReportExporter {
     console.log(`-> đọc ${orders.length} đơn, bỏ ${orders.length - rows.length} đơn huỷ, ghi ${lines.length} dòng, tổng ${vnd(sum(rows))} ₫\n`);
   }
 
-  // Bước bắt buộc: lớp con phải viết.
+  // Bước bắt buộc, lớp con nào cũng phải viết.
   protected abstract formatRow(order: Order): string;
 
-  // Hook: mặc định không làm gì, lớp con ghi đè khi cần.
+  // Hook mặc định không làm gì, lớp con ghi đè khi cần.
   protected header(): string | null {
     return null;
   }

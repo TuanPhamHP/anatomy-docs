@@ -11,12 +11,11 @@ export const POINT_VALUE = 10000;
 export const groupVND = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
 // The listeners, in the order their stations stand along the bus (left to right).
-// `ref` is how the example code passes each one to subscribe/unsubscribe.
 export const LISTENERS = [
-  { id: "email", name: "Email", cls: "EmailListener", ref: "email", flag: "rect", react: (order) => `gửi xác nhận đơn ${order.code}` },
-  { id: "stock", name: "Kho", cls: "StockListener", ref: "StockListener()", flag: "square", react: (order) => `giữ ${order.items} sản phẩm` },
-  { id: "points", name: "Điểm", cls: "PointsListener", ref: "PointsListener()", flag: "disc", react: (order) => `cộng ${Math.floor(order.total / POINT_VALUE)} điểm` },
-  { id: "analytics", name: "Thống kê", cls: "AnalyticsListener", ref: "AnalyticsListener()", flag: "pennant", react: (order) => `ghi doanh thu ${groupVND(order.total)} ₫` },
+  { id: "email", name: "Email", cls: "EmailListener", flag: "rect", react: (order) => `gửi xác nhận đơn ${order.code}` },
+  { id: "stock", name: "Kho", cls: "StockListener", flag: "square", react: (order) => `giữ ${order.items} sản phẩm` },
+  { id: "points", name: "Điểm", cls: "PointsListener", flag: "disc", react: (order) => `cộng ${Math.floor(order.total / POINT_VALUE)} điểm` },
+  { id: "analytics", name: "Thống kê", cls: "AnalyticsListener", flag: "pennant", react: (order) => `ghi doanh thu ${groupVND(order.total)} ₫` },
 ];
 
 // Each step changes the subscriber list (or not), then one order is placed.

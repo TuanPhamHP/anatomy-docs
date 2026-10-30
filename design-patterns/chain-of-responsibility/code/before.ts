@@ -7,7 +7,7 @@ function approve(amount: number): string {
   } else if (amount <= 200_000_000) {
     return "Giám đốc duyệt";
   } else {
-    return "bị từ chối: vượt mọi hạn mức"; // thêm một cấp duyệt = sửa hàm này
+    return "bị từ chối: vượt mọi hạn mức"; // thêm một cấp duyệt là phải sửa hàm này
   }
 }
 

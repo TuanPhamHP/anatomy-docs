@@ -210,7 +210,7 @@ export const svg = k.figureSvg({
   width: WIDTH,
   height: HEIGHT,
   label:
-    "Một cỗ máy có thanh phím phía trên và một trống trạng thái phía dưới. Thanh phím có bốn phím (gửi duyệt, duyệt, từ chối, sửa lại) và một ô kính hiện tên trạng thái. Trống có bốn hàng lỗ, mỗi hàng là một trạng thái; hàng nằm trên đỉnh là trạng thái hiện tại. Phím nào có lỗ bên dưới thì đi xuống được và trống quay sang trạng thái kế; phím chạm mặt trống thì bị chặn.",
+    "Hình vẽ một cỗ máy có thanh phím ở trên và trống trạng thái ở dưới. Thanh phím có bốn phím gửi duyệt, duyệt, từ chối, sửa lại và một ô kính hiện tên trạng thái. Trống có bốn hàng lỗ, mỗi hàng ứng với một trạng thái, và hàng nằm trên đỉnh là trạng thái hiện tại. Phím nào có lỗ bên dưới thì nhấn xuống được và trống quay sang trạng thái kế, còn phím chạm vào mặt trống thì bị chặn.",
   body: [
     base(),
     upright(UPRIGHTS[0]),
@@ -280,7 +280,7 @@ let step = stepOf(sel);
 function describe() {
   const outcome = step.result.ok ? "chuyển sang " + stateOf(step.result.next).name : "bị chặn";
   stage.setAttribute("aria-valuenow", String(sel + 1));
-  stage.setAttribute("aria-valuetext", "Bước " + (sel + 1) + ": " + step.from.name + ", bấm " + step.act.name + ", " + outcome);
+  stage.setAttribute("aria-valuetext", "Bước " + (sel + 1) + ". Hồ sơ đang ở trạng thái " + step.from.name + ", bấm " + step.act.name + " thì " + outcome + ".");
   emit();
 }
 const emit = () => stage.dispatchEvent(new CustomEvent("dp:state", { detail: { index: sel, touring } }));
@@ -407,10 +407,10 @@ const steps = SCENARIO.map((s, i) => {
   const from = stateOf(s.state);
   const act = actionOf(s.action);
   const result = apply(s.state, s.action);
-  const said = result.ok
-    ? `<code>${from.cls}.${s.action}()</code> chuyển hồ sơ sang <strong>${stateOf(result.next).name}</strong>.`
-    : `<code>${from.cls}</code> không nhận thao tác này (${result.reason}), nên phím chạm mặt trống và trạng thái giữ nguyên.`;
-  return { label: s.label, short: String(i + 1), caption: `Ở trạng thái <strong>${from.name}</strong>, bấm <em>${act.name}</em>: ${said}` };
+  const caption = result.ok
+    ? `Hồ sơ đang ở trạng thái ${from.name}. Khi bấm ${act.name}, lớp <code>${from.cls}</code> nhận thao tác này và chuyển hồ sơ sang <strong>${stateOf(result.next).name}</strong>.`
+    : `Hồ sơ đang ở trạng thái ${from.name}, nên lớp <code>${from.cls}</code> từ chối thao tác ${act.name} vì ${result.reason}. Phím chạm mặt trống và trạng thái vẫn là <strong>${from.name}</strong>.`;
+  return { label: s.label, short: String(i + 1), caption };
 });
 
 const first = SCENARIO[START];
@@ -420,13 +420,13 @@ export const plate = withSteps(k.plateHtml({
   hint: "Bấm vào hình để sang bước tiếp",
   readout: `${stateOf(first.state).name} · bấm ${actionOf(first.action).name}`,
   keys: [
-    { mark: "lit", label: "Phím đang bấm: một thao tác trên hồ sơ" },
-    { mark: "raised", label: "Trống trạng thái: hàng lỗ trên đỉnh là trạng thái hiện tại" },
+    { mark: "lit", label: "Phím đang bấm, ứng với một thao tác trên hồ sơ" },
+    { mark: "raised", label: "Trống trạng thái, hàng lỗ trên đỉnh là trạng thái hiện tại" },
   ],
   caption:
-    "Thanh phím là hồ sơ: lúc nào cũng có đúng bốn phím gửi duyệt, duyệt, từ chối, sửa lại. Bên dưới là trống trạng thái, mỗi trạng thái một hàng lỗ, và hàng nằm trên đỉnh là trạng thái hiện tại. Phím có lỗ bên dưới thì đi xuống được, rồi trống quay sang trạng thái kế; phím chạm mặt trống thì bị chặn. Cùng một phím, kết quả do trạng thái quyết định.",
-  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="State: phím mũi tên để chuyển giữa các bước" aria-valuemin="1" aria-valuemax="${SCENARIO.length}" aria-valuenow="${START + 1}">${svg}</div>`,
-}), stepsHtml({ label: "Các bước: hồ sơ đi qua các trạng thái", steps, start: START }));
+    "Thanh phím đóng vai hồ sơ, lúc nào cũng có đúng bốn phím gửi duyệt, duyệt, từ chối và sửa lại. Bên dưới là trống trạng thái, mỗi trạng thái một hàng lỗ, và hàng nằm trên đỉnh là trạng thái hiện tại. Phím nào có lỗ bên dưới thì nhấn xuống được và trống quay sang trạng thái kế, phím nào chạm mặt trống thì bị chặn, nên cùng một phím mà kết quả do trạng thái quyết định.",
+  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Hình State, dùng phím mũi tên để chuyển giữa các bước" aria-valuemin="1" aria-valuemax="${SCENARIO.length}" aria-valuenow="${START + 1}">${svg}</div>`,
+}), stepsHtml({ label: "Các bước hồ sơ đi qua các trạng thái", steps, start: START }));
 
 export const FIGURE_CSS = `
 .dp-screen{fill:var(--anatomy-shade-1)}

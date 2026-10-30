@@ -21,7 +21,7 @@ def import_rows(bank: str, rows: list[dict]) -> list[dict]:
             reference = row["narrative"]
             booked_at = datetime.fromtimestamp(row["valueDate"] / 1000, tz=VN)
         else:
-            raise ValueError(f"Chưa hỗ trợ ngân hàng {bank}")  # thêm ngân hàng = sửa hàm này
+            raise ValueError(f"Chưa hỗ trợ ngân hàng {bank}")  # mỗi ngân hàng mới lại phải sửa hàm này
         result.append({"amount": amount, "reference": reference, "booked_at": booked_at})
     return result
 

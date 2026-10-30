@@ -19,8 +19,12 @@ export const STOCK_BEFORE = 12;
 // 970000 -> "970.000"
 export const groupVND = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
+// Small counts in captions read as words, the way a person would say them.
+export const inWords = (n) => ["không", "một", "hai", "ba", "bốn", "năm"][n] ?? String(n);
+
 // The subsystems, in the order the facade calls them. `shown` is what the
 // module's own window reads once its call has run (`idle` before that).
+// `result(call)` is the step caption, given the call already wrapped in <code>.
 export const SUBSYSTEMS = [
   {
     id: "inventory",
@@ -28,7 +32,7 @@ export const SUBSYSTEMS = [
     call: `inventory.reserve("${ORDER.sku}", ${ORDER.qty})`,
     idle: String(STOCK_BEFORE),
     shown: String(STOCK_BEFORE - ORDER.qty),
-    result: `giữ ${ORDER.qty} sản phẩm, tồn kho ${STOCK_BEFORE} → <strong>${STOCK_BEFORE - ORDER.qty}</strong>`,
+    result: (call) => `Bước đầu tiên, facade gọi ${call} để giữ ${inWords(ORDER.qty)} sản phẩm cho đơn, nên tồn kho giảm từ ${STOCK_BEFORE} xuống <strong>${STOCK_BEFORE - ORDER.qty}</strong>.`,
     readout: `tồn ${STOCK_BEFORE} → ${STOCK_BEFORE - ORDER.qty}`,
   },
   {
@@ -37,7 +41,7 @@ export const SUBSYSTEMS = [
     call: `payments.charge("${ORDER.card}", ${TOTAL})`,
     idle: "------",
     shown: "GD-5521",
-    result: `thu <strong>${groupVND(TOTAL)} ₫</strong> qua thẻ, mã giao dịch GD-5521`,
+    result: (call) => `Giữ hàng xong, facade mới gọi ${call}. Thẻ của khách bị trừ <strong>${groupVND(TOTAL)} ₫</strong>, kèm mã giao dịch GD-5521.`,
     readout: `${groupVND(TOTAL)} ₫ · GD-5521`,
   },
   {
@@ -46,7 +50,7 @@ export const SUBSYSTEMS = [
     call: `shipping.book("${ORDER.id}")`,
     idle: "------",
     shown: "VD-3308",
-    result: "đặt lịch giao, mã vận đơn <strong>VD-3308</strong>",
+    result: (call) => `Tiền đã về, facade gọi ${call} để đặt lịch giao và nhận mã vận đơn <strong>VD-3308</strong>.`,
     readout: "vận đơn VD-3308",
   },
   {
@@ -55,7 +59,7 @@ export const SUBSYSTEMS = [
     call: `invoices.issue("${ORDER.id}", ${TOTAL})`,
     idle: "------",
     shown: "HD-0457",
-    result: "xuất hoá đơn <strong>HD-0457</strong>",
+    result: (call) => `Tiếp theo, facade gọi ${call} để xuất hoá đơn <strong>HD-0457</strong>.`,
     readout: "hoá đơn HD-0457",
   },
   {
@@ -64,7 +68,7 @@ export const SUBSYSTEMS = [
     call: `notifier.send("${ORDER.email}", ...)`,
     idle: "------",
     shown: "ĐÃ GỬI",
-    result: "gửi email xác nhận cho khách",
+    result: (call) => `Cuối cùng, facade gọi ${call} để gửi email xác nhận cho khách. Xong cả năm việc, facade trả kết quả cho client ngay trong một lần gọi.`,
     readout: `đơn ${ORDER.id} xong`,
   },
 ];

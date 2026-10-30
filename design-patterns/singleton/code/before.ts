@@ -25,7 +25,7 @@ class ConnectionPool {
 
 const db = new Database();
 
-// Mỗi service tự tạo pool: ba pool, cần 30 kết nối trong khi DB chỉ cho 20.
+// Mỗi service tự tạo pool, nên ba pool cần 30 kết nối trong khi DB chỉ cho 20.
 class OrderService {
   pool = new ConnectionPool(db);
 }

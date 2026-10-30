@@ -3,7 +3,7 @@
 
 class ActionRefused extends Error {}
 
-// State: interface chung. Mặc định mọi thao tác đều bị chặn;
+// State là interface chung. Mặc định mọi thao tác đều bị chặn,
 // mỗi trạng thái chỉ viết lại những thao tác nó nhận.
 abstract class State {
   abstract readonly name: string;
@@ -26,7 +26,7 @@ abstract class State {
   }
 }
 
-// ConcreteState: mỗi lớp giữ trọn luật của một trạng thái.
+// Mỗi ConcreteState giữ trọn luật của một trạng thái.
 class Draft extends State {
   readonly name = "Nháp";
   readonly refusal = "hồ sơ nháp chưa được gửi đi";
@@ -63,8 +63,8 @@ class Rejected extends State {
   }
 }
 
-// Context: hồ sơ đề nghị mua hàng. Nó không hỏi "mình đang ở trạng thái nào",
-// chỉ chuyển thao tác cho trạng thái hiện tại.
+// Context là hồ sơ đề nghị mua hàng. Nó không hỏi mình đang ở trạng thái nào,
+// mà chỉ chuyển thao tác cho trạng thái hiện tại.
 class PurchaseRequest {
   state: State = new Draft();
 

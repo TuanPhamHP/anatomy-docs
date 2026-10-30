@@ -270,7 +270,7 @@ export const svg = k.figureSvg({
   width: WIDTH,
   height: HEIGHT,
   label:
-    "Một máy đối soát có một ổ cắm chuẩn hai chân tròn và một màn hình số. Phía trước là xe trượt chở ba khối chuyển đổi; mỗi khối nhận phích cắm riêng của một ngân hàng (tròn, vuông, lục giác) ở mặt trước và kết thúc bằng cùng hai chân chuẩn ở mặt sau. Khi chọn một ngân hàng, xe trượt đưa khối của ngân hàng đó tới trước ổ cắm rồi đẩy chân cắm vào, và màn hình hiện số tiền đã chuẩn hoá.",
+    "Máy đối soát có một ổ cắm chuẩn hai chân tròn và một màn hình số. Phía trước máy là một xe trượt chở ba khối chuyển đổi. Mặt trước mỗi khối vừa với phích cắm riêng của một ngân hàng, hình tròn, vuông hoặc lục giác, còn mặt sau khối nào cũng là hai chân chuẩn giống nhau. Khi bạn chọn một ngân hàng, xe trượt đưa khối của ngân hàng đó tới trước ổ cắm rồi đẩy vào, và màn hình hiện số tiền đã được chuẩn hoá.",
   body: [
     base(),
     railsAndBackStop(),
@@ -309,7 +309,7 @@ const follow = (value, target, dt, tau, calm) => {
 function describe() {
   const bank = BANKS[sel];
   stage.setAttribute("aria-valuenow", String(sel + 1));
-  stage.setAttribute("aria-valuetext", "Ngân hàng " + bank.id + ": " + rawAmount(bank) + " được chuyển thành " + groupVND(converted[sel].amount) + " đồng");
+  stage.setAttribute("aria-valuetext", "Ngân hàng " + bank.id + " gửi " + rawAmount(bank) + ", adapter chuyển thành " + groupVND(converted[sel].amount) + " đồng");
   emit();
 }
 // Tell the step controls under the card which step is showing and whether the tour runs.
@@ -402,7 +402,7 @@ const first = BANKS[START];
 const steps = BANKS.map((bank) => ({
   label: `Ngân hàng ${bank.id}`,
   short: bank.id,
-  caption: `Ngân hàng ${bank.id} gửi <code>${bank.field}: ${rawAmount(bank)}</code>, ${bank.sent}. <code>Bank${bank.id}Adapter</code> ${bank.how}: <strong>${groupVND(ADAPT[bank.id](bank.raw).amount)} ₫</strong>.`,
+  caption: `Ngân hàng ${bank.id} gửi <code>${bank.field}: ${rawAmount(bank)}</code>, ${bank.sent}. Adapter của ${bank.id} ${bank.how}, nên máy đối soát nhận đúng <strong>${groupVND(ADAPT[bank.id](bank.raw).amount)} ₫</strong>.`,
 }));
 export const plate = withSteps(k.plateHtml({
   fig: "Fig 1",
@@ -410,13 +410,13 @@ export const plate = withSteps(k.plateHtml({
   hint: "Rê chuột để chọn ngân hàng",
   readout: `${first.id} · ${rawAmount(first)} → ${groupVND(ADAPT[first.id](first.raw).amount)} ₫`,
   keys: [
-    { mark: "lit", label: "Khối chuyển đổi đang cắm: adapter của ngân hàng được chọn" },
-    { mark: "raised", label: "Phích cắm tròn, vuông, lục giác: dữ liệu riêng của ngân hàng A, B, C" },
+    { mark: "lit", label: "Khối chuyển đổi đang cắm, tức adapter của ngân hàng đang chọn" },
+    { mark: "raised", label: "Phích cắm tròn, vuông và lục giác, ứng với kiểu dữ liệu riêng của ngân hàng A, B, C" },
   ],
   caption:
-    "Máy đối soát chỉ có một ổ cắm chuẩn và không bao giờ thay đổi. Mỗi ngân hàng gửi số tiền theo kiểu riêng (số nguyên, chuỗi có dấu chấm, chuỗi thập phân), nên mỗi ngân hàng có một khối chuyển đổi riêng: mặt trước khớp phích của ngân hàng, mặt sau luôn là hai chân chuẩn. Thêm ngân hàng mới chỉ là thêm một khối.",
-  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Adapter: phím mũi tên để chọn ngân hàng A, B hoặc C" aria-valuemin="1" aria-valuemax="3" aria-valuenow="${START + 1}">${svg}</div>`,
-}), stepsHtml({ label: "Các bước: chọn ngân hàng", steps, start: START }));
+    "Máy đối soát chỉ có một ổ cắm chuẩn, và ổ cắm ấy không bao giờ đổi. Ba ngân hàng gửi số tiền theo ba kiểu khác nhau, nên mỗi ngân hàng có một khối chuyển đổi riêng, mặt trước khớp với phích của ngân hàng còn mặt sau luôn là hai chân chuẩn. Muốn nhận thêm một ngân hàng, bạn chỉ cần làm thêm một khối.",
+  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Adapter, dùng phím mũi tên để chọn ngân hàng A, B hoặc C" aria-valuemin="1" aria-valuemax="3" aria-valuenow="${START + 1}">${svg}</div>`,
+}), stepsHtml({ label: "Chọn ngân hàng", steps, start: START }));
 
 export const FIGURE_CSS = `
 .dp-screen{fill:var(--anatomy-shade-1)}

@@ -1,4 +1,4 @@
-// Strategy: mỗi cách tính phí giao hàng là một lớp, trang thanh toán chỉ giữ một cái.
+// Strategy: mỗi cách tính phí giao hàng là một lớp, trang thanh toán chỉ giữ một strategy.
 // Chạy: node strategy.ts   (Node 22.18 trở lên chạy thẳng TypeScript)
 
 interface Order {
@@ -18,7 +18,7 @@ class WeightFee implements ShippingStrategy {
   readonly name = "Theo cân nặng";
 
   quote(order: Order): number {
-    const extraKg = Math.max(0, Math.ceil(order.weightKg - 1)); // phần lẻ tính tròn một kg
+    const extraKg = Math.max(0, Math.ceil(order.weightKg - 1)); // phần lẻ làm tròn lên một kg
     return 15000 + extraKg * 5000;
   }
 }

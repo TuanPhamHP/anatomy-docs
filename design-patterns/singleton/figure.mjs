@@ -324,7 +324,7 @@ export const svg = k.figureSvg({
   width: WIDTH,
   height: HEIGHT,
   label:
-    "Một tủ cơ sở dữ liệu có 20 cổng kết nối, chia hai cụm 10 cổng; chỗ của cụm thứ ba chỉ là tấm che trơn. Trước tủ là ba cửa sàn: một hộp pool trồi lên từ cửa sàn rồi lùi vào cắm 10 chân vào một cụm cổng. Ba xe service chạy trên ray ngang, mỗi xe đẩy một cần cắm vào lỗ trên mặt hộp. Khi mỗi service tự tạo pool, hai hộp chiếm hết 20 cổng và hộp thứ ba đâm vào tấm che rồi bật cờ lỗi. Với Singleton, chỉ một hộp #1 được tạo và cả ba xe cùng cắm vào nó.",
+    "Hình vẽ một tủ cơ sở dữ liệu có 20 cổng kết nối, chia thành hai cụm 10 cổng, còn chỗ của cụm thứ ba chỉ là một tấm che trơn. Trước tủ có ba cửa sàn. Mỗi hộp pool trồi lên từ một cửa sàn rồi lùi vào, cắm 10 chân vào một cụm cổng. Ba xe service chạy trên ray ngang, mỗi xe đẩy một cần cắm vào lỗ trên mặt hộp. Khi mỗi service tự tạo pool, hai hộp đầu chiếm hết 20 cổng, còn hộp thứ ba đâm vào tấm che rồi bật cờ lỗi. Với Singleton, chỉ một hộp #1 được tạo và cả ba xe cùng cắm vào nó.",
   body: [
     base(),
     LANES.map(well).join(""),
@@ -547,14 +547,18 @@ emit();
 draw();
 `;
 
+// Small counts read as words in the captions: "hai pool đầu", "pool thứ ba".
+const WORDS = ["không", "một", "hai", "ba", "bốn", "năm"];
+const say = (n) => WORDS[n] ?? String(n);
 const caption = (step) => {
   if (!step.shared) {
     const ok = step.pools.filter((pool) => pool.ok);
-    return `Không có Singleton: mỗi service gọi <code>ConnectionPool()</code> riêng. Pool #1 và #2 mở mỗi pool ${POOL_SIZE} kết nối, chiếm hết <strong>${ports(step.used)}</strong> cổng; pool #${step.pools.length} cần thêm ${POOL_SIZE} nên bị từ chối. Cần ${step.pools.length * POOL_SIZE} cổng cho ${ok.length + 1} pool, cơ sở dữ liệu chỉ có ${DB_PORTS}.`;
+    const word = say(ok.length);
+    return `Khi chưa có Singleton, mỗi service tự gọi <code>ConnectionPool()</code>. ${word[0].toUpperCase() + word.slice(1)} pool đầu đã chiếm hết <strong>${ports(step.used)}</strong> cổng, nên pool thứ ${say(step.pools.length)} bị từ chối vì ${say(step.pools.length)} pool cần tới ${step.pools.length * POOL_SIZE} cổng.`;
   }
   const service = SERVICES[step.calls - 1];
-  if (step.calls === 1) return `${service.name} gọi <code>get_pool()</code> lần đầu: chưa có pool nên tạo <strong>pool #1</strong>, mở ${POOL_SIZE} kết nối (cổng ${ports(step.used)}).`;
-  return `${service.name} gọi <code>get_pool()</code>: pool đã có nên nhận lại đúng <strong>pool #1</strong>. Vẫn ${step.pools.length} pool, cổng ${ports(step.used)}.`;
+  if (step.calls === 1) return `${service.name} là service đầu tiên gọi <code>get_pool()</code>. Lúc này chưa có pool nào, nên <strong>pool #1</strong> được tạo và mở ${POOL_SIZE} kết nối, chiếm ${ports(step.used)} cổng.`;
+  return `${service.name} cũng gọi <code>get_pool()</code>, nhưng pool đã có sẵn nên nó nhận lại đúng <strong>pool #1</strong>. Hệ thống vẫn chỉ có ${say(step.pools.length)} pool, chiếm ${ports(step.used)} cổng.`;
 };
 const steps = STEPS.map((step, i) => ({
   label: i === 0 ? "Mỗi service tự tạo" : `${SERVICES[step.calls - 1].name} gọi`,
@@ -569,13 +573,13 @@ export const plate = withSteps(k.plateHtml({
   hint: "Bấm để sang bước tiếp",
   readout: `${SERVICES[first.calls - 1].short} → pool #1 · ${first.pools.length} pool, cổng ${ports(first.used)}`,
   keys: [
-    { mark: "lit", label: "Pool #1: instance duy nhất mà mọi service nhận được" },
-    { mark: "raised", label: "Xe service: cần cắm vào lỗ trên hộp là tham chiếu tới pool đó" },
+    { mark: "lit", label: "Pool #1, instance duy nhất mà mọi service đều nhận được" },
+    { mark: "raised", label: "Xe service, với cần cắm vào hộp là tham chiếu tới pool đó" },
   ],
   caption:
-    `Cơ sở dữ liệu chỉ có ${DB_PORTS} cổng; mỗi pool chiếm ${POOL_SIZE}. Nếu mỗi service tự tạo pool, pool thứ ba không còn cổng để mở. Singleton cho mọi lời gọi get_pool() cùng một hộp: lần đầu tạo, các lần sau chỉ cắm thêm vào hộp đó, nên số pool luôn là 1.`,
-  body: `<div class="iso-stage" tabindex="0" role="group" aria-label="Singleton: bấm hoặc dùng phím mũi tên để sang bước tiếp">${svg}</div>`,
-}), stepsHtml({ label: "Các bước: tạo và dùng chung pool", steps, start: START }));
+    `Cơ sở dữ liệu chỉ có ${DB_PORTS} cổng mà mỗi pool đã chiếm ${POOL_SIZE}, nên nếu mỗi service tự tạo pool thì đến pool thứ ba sẽ không còn cổng để mở. Singleton trả về cùng một hộp cho mọi lời gọi get_pool(). Lần đầu nó tạo hộp, các lần sau chỉ cắm thêm vào hộp đó, nên lúc nào cũng chỉ có một pool.`,
+  body: `<div class="iso-stage" tabindex="0" role="group" aria-label="Singleton, bấm hoặc dùng phím mũi tên để sang bước tiếp">${svg}</div>`,
+}), stepsHtml({ label: "Các bước tạo và dùng chung pool", steps, start: START }));
 
 export const FIGURE_CSS = `
 .sg-shaft{fill:var(--anatomy-shade-0)}

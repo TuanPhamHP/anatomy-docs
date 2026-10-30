@@ -31,7 +31,7 @@ def vnd(n: int) -> str:
 class ReportExporter(ABC):
     extension = "txt"
 
-    # Template method: thứ tự các bước cố định. Lớp con không ghi đè hàm này.
+    # Đây là template method: thứ tự các bước cố định, lớp con không ghi đè hàm này.
     def export(self) -> list[str]:
         orders = self.read_orders()
         rows = self.keep_valid(orders)
@@ -46,7 +46,7 @@ class ReportExporter(ABC):
         self.write(lines, orders, rows)
         return lines
 
-    # Các bước dùng chung: viết một lần ở lớp cha.
+    # Các bước dùng chung được viết một lần ở lớp cha.
     def read_orders(self) -> list[Order]:
         return ORDERS  # thực tế: truy vấn cơ sở dữ liệu
 
@@ -59,11 +59,11 @@ class ReportExporter(ABC):
         total = sum(order.amount for order in rows)
         print(f"-> đọc {len(orders)} đơn, bỏ {len(orders) - len(rows)} đơn huỷ, ghi {len(lines)} dòng, tổng {vnd(total)} ₫\n")
 
-    # Bước bắt buộc: lớp con phải viết.
+    # Bước bắt buộc, lớp con nào cũng phải viết.
     @abstractmethod
     def format_row(self, order: Order) -> str: ...
 
-    # Hook: mặc định không làm gì, lớp con ghi đè khi cần.
+    # Hook mặc định không làm gì, lớp con ghi đè khi cần.
     def header(self) -> str | None:
         return None
 

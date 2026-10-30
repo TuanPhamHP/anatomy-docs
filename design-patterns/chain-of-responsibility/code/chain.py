@@ -30,7 +30,7 @@ class Approver:
             return f"{self.role} duyệt"
         if self._next is None:
             return "bị từ chối: vượt mọi hạn mức"  # hết chuỗi mà không ai nhận
-        return self._next.handle(request)  # không đủ thẩm quyền: chuyển tiếp
+        return self._next.handle(request)  # không đủ thẩm quyền thì chuyển tiếp
 
     def can_approve(self, request: Expense) -> bool:
         return request.amount <= self.limit
@@ -45,9 +45,9 @@ def build_chain() -> Approver:
 if __name__ == "__main__":
     chain = build_chain()
     requests = [
-        Expense("CP-101", 3_000_000, "văn phòng phẩm quý 4"),
-        Expense("CP-102", 20_000_000, "laptop cho nhân viên mới"),
-        Expense("CP-103", 120_000_000, "hội nghị khách hàng"),
+        Expense("CP-101", 3_000_000, "mua văn phòng phẩm quý 4"),
+        Expense("CP-102", 20_000_000, "mua laptop cho nhân viên mới"),
+        Expense("CP-103", 120_000_000, "tổ chức hội nghị khách hàng"),
         Expense("CP-104", 900_000_000, "mở văn phòng mới"),
     ]
     for r in requests:

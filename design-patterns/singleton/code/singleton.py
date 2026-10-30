@@ -34,7 +34,7 @@ _lock = threading.Lock()
 
 
 def get_pool() -> ConnectionPool:
-    """Lần gọi đầu tạo pool; mọi lần sau trả lại đúng object đó."""
+    """Lần gọi đầu tạo pool, mọi lần sau trả lại đúng đối tượng đó."""
     global _pool
     if _pool is None:
         with _lock:  # hai thread gọi cùng lúc vẫn chỉ tạo một pool

@@ -307,7 +307,7 @@ export const svg = k.figureSvg({
   width: WIDTH,
   height: HEIGHT,
   label:
-    "Một bàn tín hiệu: hộp nút đặt hàng ở đầu một thanh truyền vuông chạy trên ba gối đỡ, trên thanh có một hàng lỗ cách đều. Bên cạnh là bốn trạm listener: Email, Kho, Điểm và Thống kê. Trạm đã đăng ký trượt sát vào thanh và cắm chốt xuống một lỗ, nên khi nút được bấm và thanh đẩy đi, xe trượt của trạm chạy theo và cờ của trạm bật lên. Trạm chưa đăng ký đứng lùi ra, chốt nhấc lên, và đứng yên.",
+    "Một bàn tín hiệu với hộp nút đặt hàng ở đầu một thanh truyền vuông. Thanh chạy trên ba gối đỡ và có một hàng lỗ cách đều. Bên cạnh là bốn trạm listener gồm Email, Kho, Điểm và Thống kê. Trạm đã đăng ký trượt sát vào thanh và cắm chốt xuống một lỗ, nên khi nút được bấm và thanh đẩy đi, xe trượt của trạm chạy theo và cờ bật lên. Trạm chưa đăng ký thì lùi ra, nhấc chốt và đứng yên.",
   body: [
     base(),
     strokeScale(),
@@ -365,7 +365,7 @@ function describe() {
   want = wanted(sel);
   const step = STEPS[sel];
   stage.setAttribute("aria-valuenow", String(sel + 1));
-  stage.setAttribute("aria-valuetext", "Bước " + (sel + 1) + ": đơn " + step.order.code + " đến " + step.subscribed.length + " listener: " + reactionsOf(step).map((r) => r.name).join(", "));
+  stage.setAttribute("aria-valuetext", "Bước " + (sel + 1) + ", đơn " + step.order.code + " đến " + step.subscribed.length + " listener là " + reactionsOf(step).map((r) => r.name).join(", "));
   emit();
 }
 function draw() {
@@ -474,18 +474,26 @@ draw();
 
 // Step captions, built from the model: what changed in the subscriber list, then who reacted and how.
 const listOf = (items) => items.length < 2 ? items.join("") : `${items.slice(0, -1).join(", ")} và ${items[items.length - 1]}`;
-const steps = STEPS.map((step, index) => {
-  const reactions = reactionsOf(step).map((r) => `${r.name} ${r.text.replace(/(^|\s)(\d[\d.]*)/, "$1<strong>$2</strong>")}`);
-  const order = `Đơn <code>${step.order.code}</code> (${step.order.items} sản phẩm, ${groupVND(step.order.total)} ₫)`;
-  const change = step.change
-    ? step.change.kind === "subscribe"
-      ? `<code>subscribe(${listenerOf(step.change.id).ref})</code>: trạm ${listenerOf(step.change.id).name} trượt vào và cắm chốt, nút đặt hàng không đổi gì. `
-      : `<code>unsubscribe(${listenerOf(step.change.id).ref})</code>: trạm ${listenerOf(step.change.id).name} nhấc chốt và lùi ra. `
-    : "";
+const COUNT = ["không", "một", "hai", "ba", "bốn", "năm"];
+const steps = STEPS.map((step) => {
+  const heard = `<strong>${COUNT[step.subscribed.length]}</strong> listener`;
+  const all = listOf(reactionsOf(step).map((r) => `${r.name} ${r.text}`));
+  const order = `Đơn ${step.order.code} trị giá ${groupVND(step.order.total)} ₫`;
+  const changed = step.change && listenerOf(step.change.id);
+  if (!step.change) return {
+    label: `Đặt đơn ${step.order.code}`,
+    short: "Đặt đơn",
+    caption: `Đơn ${step.order.code} gồm ${step.order.items} sản phẩm, trị giá ${groupVND(step.order.total)} ₫. Cả ${heard} đang đăng ký đều nhận tin: ${all}.`,
+  };
+  if (step.change.kind === "subscribe") return {
+    label: `Đăng ký ${changed.name}`,
+    short: "Thêm trạm",
+    caption: `Lệnh <code>subscribe</code> cắm trạm ${changed.name} vào thanh, còn nút đặt hàng không phải sửa gì. ${order} giờ đến cả ${heard}, trong đó ${changed.name} ${changed.react(step.order)}.`,
+  };
   return {
-    label: index === 0 ? `Đặt đơn ${step.order.code}` : step.change.kind === "subscribe" ? `Đăng ký ${listenerOf(step.change.id).name}` : `Huỷ đăng ký ${listenerOf(step.change.id).name}`,
-    short: index === 0 ? "Đặt đơn" : step.change.kind === "subscribe" ? "+1 trạm" : "−1 trạm",
-    caption: `${change}${order} đến ${step.subscribed.length} listener: ${listOf(reactions)}.`,
+    label: `Huỷ đăng ký ${changed.name}`,
+    short: "Bớt trạm",
+    caption: `Lệnh <code>unsubscribe</code> nhấc chốt của trạm ${changed.name} nên trạm đứng yên. ${order} chỉ đến ${heard} còn lại: ${all}.`,
   };
 });
 
@@ -496,13 +504,13 @@ export const plate = withSteps(k.plateHtml({
   hint: "Bấm vào hình để sang bước sau",
   readout: `Đơn ${first.order.code} → ${first.subscribed.length} listener`,
   keys: [
-    { mark: "lit", label: "Cờ đang bật: trạm đã nhận sự kiện" },
-    { mark: "raised", label: "Bốn trạm từ trái sang: Email, Kho, Điểm, Thống kê" },
+    { mark: "lit", label: "Cờ bật lên ở những trạm vừa nhận sự kiện" },
+    { mark: "raised", label: "Bốn trạm từ trái sang phải là Email, Kho, Điểm và Thống kê" },
   ],
   caption:
-    "Nút đặt hàng chỉ đẩy một thanh truyền chung và không biết có bao nhiêu trạm đang nghe. Trạm nào cắm chốt xuống lỗ trên thanh thì chạy theo thanh và bật cờ; trạm nhấc chốt thì đứng yên. Đăng ký hay huỷ đăng ký chỉ là cắm hay nhấc một chốt, và thanh còn lỗ trống cho trạm mới.",
-  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Observer: phím mũi tên để chuyển bước" aria-valuemin="1" aria-valuemax="${STEPS.length}" aria-valuenow="${START + 1}">${svg}</div>`,
-}), stepsHtml({ label: "Các bước: đăng ký và phát sự kiện", steps, start: START }));
+    "Nút đặt hàng chỉ đẩy một thanh truyền chung và không hề biết có bao nhiêu trạm đang nghe. Trạm nào cắm chốt xuống lỗ trên thanh thì chạy theo thanh và bật cờ, còn trạm đã nhấc chốt thì đứng yên. Đăng ký hay huỷ đăng ký chỉ là cắm hay nhấc một chốt, và trên thanh vẫn còn lỗ trống cho trạm mới.",
+  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Bàn tín hiệu, dùng phím mũi tên để chuyển bước" aria-valuemin="1" aria-valuemax="${STEPS.length}" aria-valuenow="${START + 1}">${svg}</div>`,
+}), stepsHtml({ label: "Đăng ký và phát sự kiện", steps, start: START }));
 
 export const FIGURE_CSS = `
 .dp-screen{fill:var(--anatomy-shade-1)}

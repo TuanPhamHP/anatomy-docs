@@ -411,7 +411,7 @@ export const svg = k.figureSvg({
   width: WIDTH,
   height: HEIGHT,
   label:
-    "Một dây chuyền ba làn dưới một cổng trục. Ba làn có khung, xe con và ray giống hệt nhau; chỉ trạm tạo phía sau là khác: làn Email gấp phong bì từ chồng giấy, làn SMS cắt phiếu từ cuộn giấy, làn Push đúc viên nang từ phễu. Cổng trục luôn chạy cùng một quy trình: gọi trạm tạo, gắp sản phẩm bằng đĩa hút chuẩn mà sản phẩm nào cũng có, rồi đặt vào khay gửi đi; màn hình bên cạnh hiện kết quả gửi.",
+    "Một dây chuyền ba làn nằm dưới một cổng trục. Ba làn có khung, xe con và ray giống hệt nhau, chỉ có trạm tạo phía sau là khác. Làn Email gấp phong bì từ chồng giấy, làn SMS cắt phiếu từ cuộn giấy, còn làn Push đúc viên nang từ phễu. Lần nào cổng trục cũng chạy cùng một quy trình: gọi trạm tạo, gắp sản phẩm bằng đĩa hút chuẩn mà sản phẩm nào cũng có, rồi đặt vào khay gửi đi. Màn hình bên cạnh hiện kết quả gửi.",
   body: [
     base(),
     rail(RAIL_Y[0]),
@@ -625,13 +625,20 @@ draw();
 `;
 
 const first = notify(CHANNELS[START]);
+// Small counts read as words in the captions: "một tin".
+const WORDS = ["không", "một", "hai", "ba", "bốn", "năm"];
+// What the made product does once the gantry has picked it, in the reader's words.
+const DOES = {
+  email: (r) => `phong bì tự gửi nội dung tới ${r.to}`,
+  sms: (r) => `phiếu tự bỏ dấu cho vừa ${WORDS[parseInt(r.note, 10)] ?? r.note} tin rồi gửi tới ${r.to}`,
+  push: () => `viên này tự rút gọn nội dung cho vừa màn hình khoá rồi gửi đi`,
+};
 const steps = CHANNELS.map((channel) => {
   const r = notify(channel);
-  const what = channel.id === "email" ? `gửi tới ${r.to}, ${r.note}` : channel.id === "sms" ? `bỏ dấu cho vừa tin nhắn, gửi tới ${r.to}: ${r.note}` : `rút gọn còn “${r.body}” cho màn hình khoá`;
   return {
     label: `Kênh ${channel.label}`,
     short: channel.label,
-    caption: `<code>${channel.creator}.create_sender()</code> tạo ${channel.made}: <code>${channel.product}</code>. <code>notify()</code> của lớp cha không đổi gì, chỉ gắp nó và gọi <code>send()</code>: ${what}, phí <strong>${r.cost} ₫</strong>.`,
+    caption: `<code>${channel.creator}</code> tạo ra ${channel.made}. Cổng trục gắp nó như mọi lần, còn ${DOES[channel.id](r)} với phí <strong>${r.cost} ₫</strong>.`,
   };
 });
 
@@ -641,14 +648,14 @@ export const plate = withSteps(k.plateHtml({
   hint: "Rê chuột để chọn kênh",
   readout: `${first.creator} → ${first.product}${first.note ? ` · ${first.note}` : ""} · ${first.cost} ₫`,
   keys: [
-    { mark: "lit", label: "Sản phẩm vừa tạo: Sender của kênh đang chọn" },
-    { mark: "raised", label: "Trạm tạo phía sau mỗi làn: create_sender() của từng lớp con" },
-    { mark: "flat", label: "Đĩa hút giống nhau trên mọi sản phẩm: interface Sender" },
+    { mark: "lit", label: "Sản phẩm vừa được tạo, tức Sender của kênh đang chọn" },
+    { mark: "raised", label: "Trạm tạo phía sau mỗi làn, ứng với create_sender() của từng lớp con" },
+    { mark: "flat", label: "Đĩa hút giống nhau trên mọi sản phẩm, ứng với interface Sender" },
   ],
   caption:
-    "Ba làn có khung, ray và xe con giống hệt nhau; chỉ trạm tạo phía sau là khác: chồng giấy và khuôn gấp phong bì, cuộn giấy và dao cắt phiếu, phễu và khuôn đúc viên nang. Đó là phần create_sender() mỗi lớp con tự viết. Cổng trục là notify() của lớp cha: lần nào cũng gọi trạm tạo, gắp sản phẩm bằng đĩa hút chuẩn rồi đặt vào khay gửi đi, không cần biết mình vừa gắp thứ gì.",
-  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Factory Method: phím mũi tên để chọn kênh Email, SMS hoặc Push" aria-valuemin="1" aria-valuemax="3" aria-valuenow="${START + 1}">${svg}</div>`,
-}), stepsHtml({ label: "Các bước: chọn kênh gửi", steps, start: START }));
+    "Ba làn có khung, ray và xe con giống hệt nhau, chỉ có trạm tạo phía sau là khác, và đó chính là phần create_sender() mà mỗi lớp con tự viết. Cổng trục đóng vai notify() của lớp cha. Lần nào nó cũng gọi trạm tạo, gắp sản phẩm bằng đĩa hút chuẩn rồi đặt vào khay gửi đi, mà không cần biết mình vừa gắp thứ gì.",
+  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Factory Method, dùng phím mũi tên để chọn kênh Email, SMS hoặc Push" aria-valuemin="1" aria-valuemax="3" aria-valuenow="${START + 1}">${svg}</div>`,
+}), stepsHtml({ label: "Chọn kênh gửi thông báo", steps, start: START }));
 
 export const FIGURE_CSS = `
 .fm-screen{fill:var(--anatomy-shade-1)}

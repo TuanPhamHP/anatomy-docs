@@ -1,4 +1,4 @@
-"""Strategy: mỗi cách tính phí giao hàng là một lớp, trang thanh toán chỉ giữ một cái.
+"""Strategy: mỗi cách tính phí giao hàng là một lớp, trang thanh toán chỉ giữ một strategy.
 
 Chạy: python3 strategy.py
 """
@@ -26,7 +26,7 @@ class WeightFee:
     name = "Theo cân nặng"
 
     def quote(self, order: Order) -> int:
-        extra_kg = max(0, math.ceil(order.weight_kg - 1))  # phần lẻ tính tròn một kg
+        extra_kg = max(0, math.ceil(order.weight_kg - 1))  # phần lẻ làm tròn lên một kg
         return 15000 + extra_kg * 5000
 
 

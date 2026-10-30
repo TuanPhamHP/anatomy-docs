@@ -11,9 +11,9 @@ export const APPROVERS = [
 ];
 
 export const REQUESTS = [
-  { id: "CP-101", amount: 3000000, purpose: "văn phòng phẩm quý 4" },
-  { id: "CP-102", amount: 20000000, purpose: "laptop cho nhân viên mới" },
-  { id: "CP-103", amount: 120000000, purpose: "hội nghị khách hàng" },
+  { id: "CP-101", amount: 3000000, purpose: "mua văn phòng phẩm quý 4" },
+  { id: "CP-102", amount: 20000000, purpose: "mua laptop cho nhân viên mới" },
+  { id: "CP-103", amount: 120000000, purpose: "tổ chức hội nghị khách hàng" },
   { id: "CP-104", amount: 900000000, purpose: "mở văn phòng mới" },
 ];
 

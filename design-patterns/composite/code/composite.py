@@ -34,7 +34,7 @@ class Item(Parcel):
         return [f"{'  ' * depth}{self.name}: {kg(self.weight())}"]
 
 
-# Composite: một hộp. Nó cũng là Parcel, và chứa các Parcel khác: món hàng hay hộp đều được.
+# Composite: một hộp. Bản thân nó cũng là Parcel và chứa các Parcel khác, món hàng hay hộp đều được.
 class Box(Parcel):
     def __init__(self, name: str, tare: int) -> None:
         super().__init__(name)

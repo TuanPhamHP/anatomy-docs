@@ -439,7 +439,7 @@ export const svg = k.figureSvg({
   width: WIDTH,
   height: HEIGHT,
   label:
-    "Một bàn sắp chữ. Trên bệ đá có khuôn năm hàng: hàng đầu là dòng SELECT cố định, bốn hàng sau trống. Phía trước là khay chứa bốn thanh chữ đúc sẵn, mỗi thanh cho một lời gọi builder. Mỗi lời gọi nhấc một thanh lên và đặt vào đúng hàng của nó. Bên phải là thanh khoá có ngón dò và lá cờ; phía sau là hộp ra giấy. Khi gọi build(), thanh khoá ép vào các hàng: nếu hàng cuối còn trống thì cờ bật lên và không in gì; nếu đủ, trục in lăn qua khuôn và tờ in câu SQL cùng danh sách tham số trồi lên khỏi hộp.",
+    "Hình vẽ một bàn sắp chữ của nhà in. Trên bệ đá có một khuôn năm hàng, hàng đầu là dòng SELECT cố định, bốn hàng sau còn trống. Phía trước là khay chứa bốn thanh chữ đúc sẵn, mỗi thanh ứng với một lời gọi builder, và mỗi lời gọi nhấc một thanh lên đặt vào đúng hàng của nó. Bên phải có thanh khoá với ngón dò và lá cờ, phía sau là hộp ra giấy. Khi gọi build(), thanh khoá ép vào các hàng. Nếu hàng cuối còn trống thì cờ bật lên và máy không in gì. Nếu đủ, trục in lăn qua khuôn và tờ in mang câu SQL cùng danh sách tham số trồi lên khỏi hộp.",
   body: [
     base(),
     housing(),
@@ -624,6 +624,9 @@ draw();
 // Step captions, built from the model.
 const code = (text) => `<code>${text.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</code>`;
 const LABELS = ["status()", "between()", "order_by()", "build() ✗", "page()", "build() ✓"];
+// Small counts read as words in the captions: "sáu dòng SQL".
+const WORDS = ["không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín", "mười"];
+const say = (n) => WORDS[n] ?? String(n);
 const steps = STEPS.map((step, n) => {
   const label = LABELS[n];
   const short = String(n + 1);
@@ -631,19 +634,17 @@ const steps = STEPS.map((step, n) => {
   if (step.kind === "build") {
     const r = state.result;
     if (r.error) {
-      return { label, short, caption: `${code(".build()")} kiểm tra cả khuôn trước khi in: hàng cuối còn trống, ngón dò lọt vào chỗ trống và cờ bật lên. Builder <strong>từ chối: thiếu page()</strong>, không có Query nào được tạo.` };
+      return { label, short, caption: `Gọi ${code("build()")} khi hàng cuối còn trống, nên ngón dò lọt vào chỗ trống và cờ bật lên. Builder <strong>từ chối vì thiếu page()</strong> và không tạo ra Query nào.` };
     }
-    return { label, short, caption: `${code(".build()")} khoá khuôn, trục in lăn qua và tờ in trồi lên: một <strong>Query</strong> gồm ${r.query.sql.split("\n").length} dòng SQL và ${r.query.params.length} tham số riêng. Query không sửa được nữa.` };
+    return { label, short, caption: `Gọi ${code("build()")} lần nữa thì khuôn được khoá, trục in lăn qua và tờ in trồi lên. Đó là một <strong>Query</strong> gồm ${say(r.query.sql.split("\n").length)} dòng SQL và ${say(r.query.params.length)} tham số, không sửa được nữa.` };
   }
   const call = CALLS[step.call];
-  const added = (() => {
-    const b = state.builder;
-    if (call.row === 1) return `hàng ${code("status = ?")}, giá trị ${code('"paid"')} đi vào danh sách tham số chứ không dán vào câu`;
-    if (call.row === 2) return `hàng khoảng ngày từ 2026-10-01 đến trước 2026-11-01: hai điều kiện, hai tham số. Builder chỉ gom, chưa ghép câu`;
-    if (call.row === 3) return `hàng ${code(b.order)}; tên cột phải nằm trong danh sách được phép`;
-    return `hàng cuối ${code("LIMIT ? OFFSET ?")} với ${b.paging[0]} và ${b.paging[1]}; ngón dò giờ chạm vào hàng này`;
-  })();
-  return { label, short, caption: `${code("." + (call.short || call.py))} thêm ${added}. Khuôn có ${state.rows.length} hàng.` };
+  const b = state.builder;
+  const call_ = code(call.short || call.py);
+  if (call.row === 1) return { label, short, caption: `Gọi ${call_} để đặt hàng lọc theo trạng thái vào khuôn. Giá trị "paid" đi vào danh sách tham số chứ không bị dán vào câu SQL.` };
+  if (call.row === 2) return { label, short, caption: `Gọi ${call_} để thêm khoảng ngày từ 2026-10-01 đến trước 2026-11-01. Đó là hai điều kiện với hai tham số, và builder mới chỉ gom lại chứ chưa ghép câu.` };
+  if (call.row === 3) return { label, short, caption: `Gọi ${call_} để sắp đơn mới nhất lên đầu. Cột ${b.order.split(" ")[2]} phải nằm trong danh sách được phép, vì tên cột không đi qua tham số được.` };
+  return { label, short, caption: `Gọi ${call_} để lấp hàng cuối bằng LIMIT và OFFSET, với hai tham số ${b.paging[0]} và ${b.paging[1]}. Lúc này ngón dò đã chạm vào hàng chữ.` };
 });
 
 const first = STEPS[START];
@@ -653,13 +654,13 @@ export const plate = withSteps(k.plateHtml({
   hint: "Rê chuột để chọn bước",
   readout: first.kind === "build" ? `build() → Query · ${query.params.length} tham số` : "",
   keys: [
-    { mark: "lit", label: "Phần bước đang làm: hàng chữ vừa đặt, cờ báo thiếu, hoặc tờ in Query" },
-    { mark: "raised", label: "Thanh chữ: mỗi lời gọi builder đặt một thanh vào đúng hàng của nó trong khuôn" },
+    { mark: "lit", label: "Phần đang diễn ra ở bước này, có thể là hàng chữ vừa đặt, cờ báo thiếu hoặc tờ in Query" },
+    { mark: "raised", label: "Thanh chữ, mỗi lời gọi builder đặt một thanh vào đúng hàng của nó trong khuôn" },
   ],
   caption:
-    "Builder giống một khuôn sắp chữ. Mỗi lời gọi đặt một thanh chữ vào đúng hàng của nó, và trong lúc sắp thì chưa có gì được in. Chỉ khi build() thì khuôn mới được kiểm tra rồi khoá lại. Thiếu hàng bắt buộc thì cờ bật lên và máy không in. Khuôn đủ thì trục in lăn qua và cho ra một tờ in: câu SQL kèm danh sách tham số riêng, và tờ in đó không sửa được nữa.",
-  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Builder: phím mũi tên để đi qua từng bước" aria-valuemin="1" aria-valuemax="${STEPS.length}" aria-valuenow="${START + 1}">${svg}</div>`,
-}), stepsHtml({ label: "Các bước: dựng câu truy vấn", steps, start: START }));
+    "Mỗi lời gọi builder đặt một thanh chữ vào đúng hàng của nó trong khuôn, và trong lúc sắp thì chưa có gì được in ra. Chỉ khi gọi build(), khuôn mới được kiểm tra rồi khoá lại. Thiếu hàng bắt buộc thì cờ bật lên và máy từ chối in, còn đủ hàng thì trục in lăn qua và cho ra một tờ in không sửa được nữa, mang câu SQL kèm danh sách tham số.",
+  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Builder, dùng phím mũi tên để đi qua từng bước" aria-valuemin="1" aria-valuemax="${STEPS.length}" aria-valuenow="${START + 1}">${svg}</div>`,
+}), stepsHtml({ label: "Các bước dựng câu truy vấn", steps, start: START }));
 
 export const FIGURE_CSS = `
 .dp-hole{fill:var(--anatomy-shade-1)}

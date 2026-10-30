@@ -15,7 +15,7 @@ export const STRATEGIES = [
     unit: "kg",
     max: 6,
     tick: 1,
-    rule: "15.000 ₫ cho kg đầu, thêm 5.000 ₫ cho mỗi kg sau (phần lẻ tính tròn một kg)",
+    rule: "Kg đầu tính 15.000 ₫, mỗi kg sau thêm 5.000 ₫ và phần lẻ được làm tròn lên",
   },
   {
     id: "distance",
@@ -26,7 +26,7 @@ export const STRATEGIES = [
     unit: "km",
     max: 30,
     tick: 5,
-    rule: "đến 5 km 15.000 ₫, đến 15 km 25.000 ₫, xa hơn 35.000 ₫",
+    rule: "Giá chia theo bậc, tới 5 km là 15.000 ₫, tới 15 km là 25.000 ₫ và xa hơn là 35.000 ₫",
   },
   {
     id: "free",
@@ -37,7 +37,7 @@ export const STRATEGIES = [
     unit: "₫",
     max: 600000,
     tick: 100000,
-    rule: "đơn từ 300.000 ₫ được miễn phí, dưới mức đó đồng giá 20.000 ₫",
+    rule: "Đơn dưới 300.000 ₫ tính đồng giá 20.000 ₫, còn từ 300.000 ₫ trở lên thì được miễn phí giao hàng",
   },
 ];
 

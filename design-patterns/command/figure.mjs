@@ -16,7 +16,7 @@ import * as k from "/home/tuanpham/.claude/skills/anatomy/kit/iso-kit.mjs";
 import * as G from "/home/tuanpham/.claude/skills/anatomy/kit/lathe.mjs";
 import { kitScript } from "/home/tuanpham/.claude/skills/anatomy/scripts/inline-kit.mjs";
 import { stepsHtml, withSteps } from "../_shared/page.mjs";
-import { COMMANDS, STEPS, STOCK, replay } from "./model.mjs";
+import { COMMANDS, STEPS, STOCK, replay, say } from "./model.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const { iso, depthOf, pathOf, solidSvg, lineSvg, cylinder } = k;
@@ -476,7 +476,7 @@ export const svg = k.figureSvg({
   width: WIDTH,
   height: HEIGHT,
   label:
-    "Một máy đọc phiếu đục lỗ. Bên trái là khay nạp chứa các phiếu lệnh đang chờ, ở giữa là bàn đọc với đầu đọc treo trên một dầm nối vào bộ đếm tồn kho có ba bánh số, bên phải là khay lịch sử; phía sau là bàn đục phiếu, nơi lập phiếu mới. Máy kéo phiếu trên cùng của khay nạp vào dưới đầu đọc, đầu đọc hạ xuống, bánh số quay tới tồn kho mới, rồi phiếu rơi vào khay lịch sử. Hoàn tác rút phiếu trên cùng của khay lịch sử về đầu đọc và bánh số quay ngược lại.",
+    "Hình vẽ một máy đọc phiếu đục lỗ. Bên trái là khay nạp chứa các phiếu lệnh đang chờ. Ở giữa là bàn đọc, phía trên có đầu đọc treo trên một dầm nối với bộ đếm tồn kho ba bánh số. Bên phải là khay lịch sử, còn phía sau là bàn đục phiếu, nơi lập phiếu mới. Mỗi lần chạy, máy kéo phiếu trên cùng của khay nạp vào dưới đầu đọc, đầu đọc hạ xuống, bánh số quay tới tồn kho mới rồi phiếu rơi sang khay lịch sử. Khi hoàn tác, máy rút phiếu trên cùng của khay lịch sử về đầu đọc và bánh số quay ngược lại.",
   body: [
     base(),
     punch(),
@@ -539,8 +539,9 @@ function settledText(n) {
 }
 function stepText(n) {
   const s = STEPS[n];
-  if (s.action === "queue") return "Bước " + (n + 1) + ": " + COMMANDS.length + " phiếu lệnh đang chờ, tồn kho " + STOCK[0];
-  return "Bước " + (n + 1) + ": " + (s.action === "undo" ? "hoàn tác " : "chạy ") + cmd(s.card) + ", tồn kho " + STOCK[n - 1] + " thành " + STOCK[n];
+  if (s.action === "queue") { const count = say(COMMANDS.length); return "Bước " + (n + 1) + ". " + count[0].toUpperCase() + count.slice(1) + " phiếu lệnh đang chờ, tồn kho " + STOCK[0] + "."; }
+  const way = STOCK[n] > STOCK[n - 1] ? " lên " : " xuống ";
+  return "Bước " + (n + 1) + ". " + (s.action === "undo" ? "Hoàn tác lệnh " : "Chạy lệnh ") + cmd(s.card) + ", tồn kho từ " + STOCK[n - 1] + way + STOCK[n] + ".";
 }
 function describe() {
   stage.setAttribute("aria-valuenow", String(sel + 1));
@@ -640,29 +641,32 @@ draw();
 // Step captions, built from the model.
 const vnd = (n) => `<strong>${n}</strong>`;
 const code = (text) => `<code>${text}</code>`;
+const cap = (text) => text[0].toUpperCase() + text.slice(1);
 const steps = STEPS.map((step, n) => {
   if (step.action === "queue") {
     return {
       label: "Xếp hàng",
       short: "Chờ",
-      caption: `Ba phiếu lệnh nằm trong khay nạp, phiếu trên cùng chạy trước: ${COMMANDS.map((c) => code(c.name)).join(", ")}. Chưa phiếu nào chạy, tồn kho ${vnd(STOCK[0])}.`,
+      caption: `${cap(say(COMMANDS.length))} phiếu lệnh đang nằm chờ trong khay nạp, phiếu trên cùng sẽ chạy trước. Chưa phiếu nào chạy nên tồn kho vẫn là ${vnd(STOCK[0])}.`,
     };
   }
   const c = COMMANDS[step.card];
   const before = replay(n - 1);
   const after = replay(n);
   if (step.action === "undo") {
+    const back = c.kind === "ship" ? `trả lại ${c.qty} sản phẩm vào kho` : `lấy bớt ${c.qty} sản phẩm ra`;
     return {
       label: "Hoàn tác",
       short: "Undo",
-      caption: `Bấm hoàn tác: máy rút phiếu trên cùng của khay lịch sử (${code(c.name)}) về đầu đọc và gọi ${code("undo()")}, trả lại ${c.qty}: tồn kho ${vnd(before.stock)} → ${vnd(after.stock)}. Lịch sử còn ${after.history.length} phiếu.`,
+      caption: `Bạn bấm Hoàn tác, máy rút phiếu “${c.name}” trên cùng khay lịch sử về đầu đọc và gọi ${code("undo()")} để ${back}. Tồn kho quay về ${vnd(after.stock)}.`,
     };
   }
   const left = after.queue.length;
+  const change = after.stock > before.stock ? `tăng từ ${before.stock} lên` : `giảm từ ${before.stock} xuống`;
   return {
     label: c.name,
     short: c.code,
-    caption: `Máy kéo phiếu ${code(c.name)} vào đầu đọc và gọi ${code("execute()")}: tồn kho ${vnd(before.stock)} → ${vnd(after.stock)}. Phiếu nằm trên cùng khay lịch sử (${after.history.length} phiếu), khay nạp còn ${left === 0 ? "trống" : `${left} phiếu`}.`,
+    caption: `Máy kéo phiếu “${c.name}” vào dưới đầu đọc và gọi ${code("execute()")}, tồn kho ${change} ${vnd(after.stock)}. Phiếu được cất lên đầu khay lịch sử, ${left === 0 ? "khay nạp giờ đã trống" : `khay nạp còn ${say(left)} phiếu`}.`,
   };
 });
 
@@ -672,13 +676,13 @@ export const plate = withSteps(k.plateHtml({
   hint: "Rê chuột để chọn bước",
   readout: `${COMMANDS[STEPS[START].card].name} · ${STOCK[START - 1]} → ${STOCK[START]}`,
   keys: [
-    { mark: "lit", label: "Phiếu lệnh máy đang chạy hoặc vừa chạy" },
+    { mark: "lit", label: "Phiếu lệnh máy đang chạy hoặc vừa chạy xong" },
     { mark: "raised", label: "Khay nạp bên trái là hàng đợi, khay bên phải là lịch sử để hoàn tác" },
   ],
   caption:
-    "Mỗi thao tác kho là một phiếu: trên phiếu ghi sẵn việc cần làm và cách đảo ngược nó. Máy không biết gì về kho; nó chỉ kéo phiếu từ khay nạp, cho đầu đọc chạy, rồi xếp phiếu vào khay lịch sử. Vì lệnh là một vật cầm được, nên xếp hàng, ghi lại, chạy lại hay hoàn tác đều chỉ là di chuyển phiếu.",
-  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Command: phím mũi tên để đi qua từng bước" aria-valuemin="1" aria-valuemax="${STEPS.length}" aria-valuenow="${START + 1}">${svg}</div>`,
-}), stepsHtml({ label: "Các bước: chạy và hoàn tác lệnh", steps, start: START }));
+    "Mỗi thao tác kho là một tấm phiếu ghi sẵn việc cần làm và cách đảo ngược nó. Cỗ máy không biết gì về kho, nó chỉ kéo phiếu từ khay nạp, cho đầu đọc chạy rồi xếp phiếu sang khay lịch sử. Vì lệnh đã thành một vật cầm được, nên xếp hàng, ghi lại, chạy lại hay hoàn tác đều chỉ là chuyện di chuyển tấm phiếu.",
+  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Hình Command, dùng phím mũi tên để đi qua từng bước" aria-valuemin="1" aria-valuemax="${STEPS.length}" aria-valuenow="${START + 1}">${svg}</div>`,
+}), stepsHtml({ label: "Các bước chạy và hoàn tác lệnh", steps, start: START }));
 
 export const FIGURE_CSS = `
 .dp-screen{fill:var(--anatomy-shade-1)}

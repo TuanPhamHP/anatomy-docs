@@ -26,7 +26,7 @@ class ConnectionPool {
     db.open(size);
   }
 
-  // Lần gọi đầu tạo pool; mọi lần sau trả lại đúng object đó.
+  // Lần gọi đầu tạo pool, mọi lần sau trả lại đúng đối tượng đó.
   // JavaScript chạy một luồng, nên không cần khoá như bản Python.
   static getInstance(): ConnectionPool {
     if (ConnectionPool.instance === null) ConnectionPool.instance = new ConnectionPool();

@@ -50,7 +50,7 @@ class PurchaseRequest:
             raise ActionRefused("hồ sơ đang chờ duyệt")
         elif self.status == "approved":
             raise ActionRefused("hồ sơ đã duyệt, không đổi được nữa")
-    # Thêm trạng thái "Đã huỷ" = sửa cả bốn hàm trên.
+    # Muốn thêm trạng thái "Đã huỷ" thì phải sửa cả bốn hàm trên.
 
 
 if __name__ == "__main__":

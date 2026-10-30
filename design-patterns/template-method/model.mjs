@@ -67,5 +67,8 @@ export function exportReport(format) {
 // Which of the six slots on the tray hold a cancelled order (the filter station lifts these).
 export const CANCELLED = ORDERS.map((order, i) => (order.status === "cancelled" ? i : -1)).filter((i) => i >= 0);
 
+// Small counts read as words in captions: "sáu đơn", "bỏ hai đơn huỷ".
+export const say = (n) => ["không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín", "mười"][n] ?? String(n);
+
 // 4565000 -> "4.565.000"
 export const groupVND = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ".");

@@ -9,7 +9,7 @@ class ActionRefused(Exception):
     pass
 
 
-# State: interface chung. Mặc định mọi thao tác đều bị chặn;
+# State là interface chung. Mặc định mọi thao tác đều bị chặn,
 # mỗi trạng thái chỉ viết lại những thao tác nó nhận.
 class State:
     name = ""
@@ -28,7 +28,7 @@ class State:
         raise ActionRefused(self.refusal)
 
 
-# ConcreteState: mỗi lớp giữ trọn luật của một trạng thái.
+# Mỗi ConcreteState giữ trọn luật của một trạng thái.
 class Draft(State):
     name = "Nháp"
     refusal = "hồ sơ nháp chưa được gửi đi"
@@ -61,8 +61,8 @@ class Rejected(State):
         request.state = Draft()
 
 
-# Context: hồ sơ đề nghị mua hàng. Nó không hỏi "mình đang ở trạng thái nào",
-# chỉ chuyển thao tác cho trạng thái hiện tại.
+# Context là hồ sơ đề nghị mua hàng. Nó không hỏi mình đang ở trạng thái nào,
+# mà chỉ chuyển thao tác cho trạng thái hiện tại.
 class PurchaseRequest:
     def __init__(self) -> None:
         self.state: State = Draft()

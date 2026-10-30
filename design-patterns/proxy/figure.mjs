@@ -449,7 +449,7 @@ const svg = k.figureSvg({
   width: WIDTH,
   height: HEIGHT,
   label:
-    "Một kho lưu trữ nặng nề có cửa nâng, bánh xe khoá và bộ đếm số lần tải; phía trước là một quầy nhỏ có cùng kiểu cửa. Khay chở báo cáo chạy trên đường ray từ trong kho, qua quầy, tới bàn người đọc. Quầy kiểm chìa khoá trước: không có chìa thì cờ từ chối bật lên và kho không mở. Lần đọc hợp lệ đầu tiên, kho mở và khay chở báo cáo về quầy; những lần sau quầy trả ngay báo cáo đang giữ.",
+    "Một kho lưu trữ nặng nề có cửa nâng, bánh xe khoá và bộ đếm số lần tải, phía trước là một quầy nhỏ có cùng kiểu cửa. Khay chở báo cáo chạy trên đường ray từ trong kho, qua quầy, tới bàn người đọc. Quầy kiểm chìa khoá trước tiên, nên không có chìa thì cờ từ chối bật lên và kho không mở. Ở lần đọc hợp lệ đầu tiên, kho mở và khay chở báo cáo về quầy, còn những lần sau quầy trả ngay báo cáo đang giữ.",
   body: [
     base(),
     track(),
@@ -493,6 +493,7 @@ const flagPlate = svg.querySelector('[data-part="flag-plate"] > .iso-solid');
 const readout = document.querySelector("[data-readout]");
 const still = matchMedia("(prefers-reduced-motion: reduce)");
 const results = play();
+const spoken = results.map((r) => !r.allowed ? r.who + " bị từ chối, kho không mở" : r.loadsNow ? r.who + " đọc lần đầu, kho mở để tải báo cáo" : r.who + " đọc lại, quầy trả ngay bản đã tải");
 const restText = results.map((r) => r.who + " → " + (!r.allowed ? "bị từ chối" : r.loadsNow ? "tải từ kho" : "bản đã tải") + " · " + r.loads + " lần tải" + (r.allowed ? " · " + secondsText(r.seconds) : ""));
 let sel = START, t = REST[START], aim = sel, speed = 1, dwell = 0;
 let frame = 0, last = 0, touring = !still.matches, visible = false, idleTimer = 0;
@@ -510,7 +511,7 @@ const lit = (el, on) => {
 };
 function describe() {
   stage.setAttribute("aria-valuenow", String(sel + 1));
-  stage.setAttribute("aria-valuetext", restText[sel]);
+  stage.setAttribute("aria-valuetext", spoken[sel]);
   emit();
 }
 // Tell the step controls under the card which step is showing and whether the tour runs.
@@ -616,10 +617,10 @@ const steps = results.map((r, i) => ({
   label: r.label,
   short: r.short,
   caption: !r.allowed
-    ? `<code>proxy.read(khach)</code>: ${r.who} không có vai trò được xem, nên Proxy từ chối ngay ở quầy. Kho không mở, báo cáo chưa được tải: <strong>${r.loads} lần tải</strong>, 0 s.`
+    ? `${r.who} gọi <code>read()</code> nhưng không có quyền xem báo cáo, nên Proxy từ chối ngay tại quầy. Kho vẫn đóng, báo cáo chưa hề được tải, và bộ đếm vẫn ở <strong>${r.loads} lần tải</strong>.`
     : r.loadsNow
-      ? `<code>proxy.read(ke_toan)</code>: ${r.who} có quyền, nhưng Proxy chưa giữ báo cáo nên mở kho và tải ${groupDots(REPORT.pages)} trang: <strong>${r.loads} lần tải</strong>, ${secondsText(r.seconds)}.`
-      : `<code>proxy.read(ke_toan)</code> lần nữa: Proxy vẫn kiểm quyền, rồi trả ngay báo cáo đang giữ, kho vẫn đóng: <strong>vẫn ${r.loads} lần tải</strong>, ${secondsText(r.seconds)}.`,
+      ? `${r.who} có quyền đọc, nhưng Proxy chưa giữ báo cáo nào, nên nó mở kho và tải về ${groupDots(REPORT.pages)} trang, mất ${secondsText(r.seconds)}. Bộ đếm lên <strong>${r.loads} lần tải</strong>.`
+      : `${r.who} đọc lại. Proxy vẫn kiểm quyền như thường, rồi trả ngay bản báo cáo đang giữ mà không mở kho, nên bộ đếm vẫn là <strong>${r.loads} lần tải</strong>.`,
 }));
 
 export const plate = withSteps(k.plateHtml({
@@ -628,13 +629,13 @@ export const plate = withSteps(k.plateHtml({
   hint: "Rê chuột để chọn bước",
   readout: `${results[START].who} → tải từ kho · ${results[START].loads} lần tải · ${secondsText(results[START].seconds)}`,
   keys: [
-    { mark: "lit", label: "Báo cáo đến tay người đọc, hoặc cờ từ chối khi không có quyền" },
-    { mark: "raised", label: "Hai cửa giống hệt nhau: cửa quầy (Proxy) và cửa kho (báo cáo thật) có cùng interface" },
+    { mark: "lit", label: "Báo cáo đến tay người đọc, hoặc cờ từ chối khi người đọc không có quyền" },
+    { mark: "raised", label: "Cửa quầy và cửa kho giống hệt nhau, vì Proxy và báo cáo thật có cùng interface" },
   ],
   caption:
-    "Người đọc chỉ làm việc với quầy phía trước. Cửa quầy giống hệt cửa kho, nên với người đọc hai bên dùng như nhau. Quầy kiểm chìa khoá trước mọi việc: không có chìa thì cờ từ chối bật lên và kho không hề mở. Lần đọc hợp lệ đầu tiên, quầy mới mở cái kho nặng nề để lấy báo cáo về (bộ đếm lên 1); những lần sau quầy trả ngay bản đang giữ.",
-  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Proxy: phím mũi tên để chọn bước" aria-valuemin="1" aria-valuemax="${results.length}" aria-valuenow="${START + 1}">${svg}</div>`,
-}), stepsHtml({ label: "Các bước: ba lần đọc báo cáo", steps, start: START }));
+    "Người đọc chỉ làm việc với quầy phía trước, và vì cửa quầy giống hệt cửa kho nên với họ hai bên dùng như nhau. Quầy kiểm chìa khoá trước mọi thứ, nên ai không có chìa sẽ thấy cờ từ chối bật lên trong khi kho không hề mở. Chỉ ở lần đọc hợp lệ đầu tiên, quầy mới mở cái kho nặng nề để lấy báo cáo về, còn những lần sau nó trả ngay bản đang giữ.",
+  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Proxy, dùng phím mũi tên để chọn bước" aria-valuemin="1" aria-valuemax="${results.length}" aria-valuenow="${START + 1}">${svg}</div>`,
+}), stepsHtml({ label: "Ba lần đọc báo cáo", steps, start: START }));
 
 export const FIGURE_CSS = `
 .dp-screen{fill:var(--anatomy-shade-1)}

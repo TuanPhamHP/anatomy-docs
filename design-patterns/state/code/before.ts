@@ -43,7 +43,7 @@ class PurchaseRequest {
       case "approved": throw new ActionRefused("hồ sơ đã duyệt, không đổi được nữa");
     }
   }
-  // Thêm trạng thái "Đã huỷ" = sửa cả bốn hàm trên.
+  // Muốn thêm trạng thái "Đã huỷ" thì phải sửa cả bốn hàm trên.
 }
 
 const request = new PurchaseRequest();

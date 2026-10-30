@@ -29,7 +29,7 @@ class Item implements Parcel {
   }
 }
 
-// Composite: một hộp. Nó cũng là Parcel, và chứa các Parcel khác: món hàng hay hộp đều được.
+// Composite: một hộp. Bản thân nó cũng là Parcel và chứa các Parcel khác, món hàng hay hộp đều được.
 class Box implements Parcel {
   readonly name: string;
   private readonly tare: number; // khối lượng của vỏ hộp

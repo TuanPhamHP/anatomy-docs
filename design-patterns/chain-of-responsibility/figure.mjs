@@ -476,7 +476,7 @@ export const svg = k.figureSvg({
   width: WIDTH,
   height: HEIGHT,
   label:
-    "Một máy phân loại đồng xu trên bàn đế. Máng nghiêng có ba lỗ tròn to dần, mỗi lỗ là hạn mức của một người duyệt: trưởng nhóm, trưởng phòng, giám đốc. Đồng xu là đề nghị chi, càng nhiều tiền càng to. Đồng xu trượt xuống, rơi vào lỗ đầu tiên đủ rộng, xuống cột của người duyệt đó và cờ của cột bật lên. Đồng xu to hơn mọi lỗ trượt khỏi cuối máng vào thùng từ chối.",
+    "Một máy phân loại đồng xu trên bàn đế. Máng nghiêng có ba lỗ tròn to dần, mỗi lỗ là hạn mức của một người duyệt, lần lượt là trưởng nhóm, trưởng phòng và giám đốc. Đồng xu là đề nghị chi, càng nhiều tiền thì càng to. Đồng xu trượt xuống, rơi vào lỗ đầu tiên đủ rộng, đi xuống cột của người duyệt đó và làm cờ của cột bật lên. Đồng xu to hơn mọi lỗ thì trượt khỏi cuối máng và rơi vào thùng từ chối.",
   body: [
     `<defs>${clips}</defs>`,
     base(),
@@ -590,7 +590,7 @@ let sel = ${START}, runT = 0, old = null, touring = !still.matches, visible = fa
 function describe() {
   const request = REQUESTS[sel];
   stage.setAttribute("aria-valuenow", String(sel + 1));
-  stage.setAttribute("aria-valuetext", "Đề nghị " + request.id + ", " + groupVND(request.amount) + " đồng: " + decisionOf(request));
+  stage.setAttribute("aria-valuetext", "Đề nghị " + request.id + ", " + groupVND(request.amount) + " đồng, " + decisionOf(request));
   emit();
 }
 // Tell the step controls under the card which step is showing and whether the tour runs.
@@ -690,12 +690,15 @@ draw();
 const steps = REQUESTS.map((request) => {
   const { by, passed } = route(request.amount);
   const money = `${groupVND(request.amount)} ₫`;
-  const names = passed.map((h) => APPROVERS[h].role);
+  // Job titles read in lower case inside a sentence: "vượt hạn mức của trưởng nhóm".
+  const role = (h) => APPROVERS[h].role.toLowerCase();
+  const names = passed.map(role);
   const list = names.length > 1 ? `${names.slice(0, -1).join(", ")} và ${names[names.length - 1]}` : names[0];
+  const asked = `Đề nghị ${request.id} xin ${money} để ${request.purpose}`;
   let caption;
-  if (by === 0) caption = `Đề nghị <code>${request.id}</code> ${money} (${request.purpose}) nằm trong hạn mức ${groupVND(APPROVERS[0].limit)} ₫ của ${APPROVERS[0].role}: đồng xu lọt ngay lỗ đầu tiên, <strong>${APPROVERS[0].role} duyệt</strong>.`;
-  else if (by > 0) caption = `Đề nghị <code>${request.id}</code> ${money} (${request.purpose}) vượt hạn mức của ${list}, nên trượt qua ${passed.length === 1 ? "lỗ đầu" : `${passed.length} lỗ đầu`}; nó lọt lỗ ${groupVND(APPROVERS[by].limit)} ₫: <strong>${APPROVERS[by].role} duyệt</strong>.`;
-  else caption = `Đề nghị <code>${request.id}</code> ${money} (${request.purpose}) vượt cả ba hạn mức, không lỗ nào giữ được, nên trượt khỏi cuối máng vào thùng: <strong>bị từ chối</strong>.`;
+  if (by === 0) caption = `${asked}, nằm trong hạn mức của ${role(0)}. Đồng xu lọt ngay lỗ đầu tiên, nên <strong>${role(0)} duyệt</strong> và chuỗi dừng ở đó.`;
+  else if (by > 0) caption = `${asked}, vượt hạn mức của ${list} nên trượt qua ${["", "lỗ đầu", "hai lỗ đầu"][passed.length]}. Tới lỗ thứ ${["", "hai", "ba"][by]} thì đồng xu lọt xuống, nên <strong>${role(by)} duyệt</strong>.`;
+  else caption = `${asked}, vượt cả ba hạn mức nên không lỗ nào giữ được. Đồng xu trượt khỏi cuối máng và rơi vào thùng, tức là đề nghị <strong>bị từ chối</strong>.`;
   // Keep each amount and its "₫" on one line in the caption.
   return { label: money, short: `${request.amount / 1e6}tr`, caption: caption.replaceAll(" ₫", "\u00a0₫") };
 });
@@ -707,13 +710,13 @@ export const plate = withSteps(k.plateHtml({
   hint: "Rê chuột để chọn đề nghị",
   readout: `${groupVND(first.amount)} ₫ → ${APPROVERS[route(first.amount).by].role} duyệt`,
   keys: [
-    { mark: "lit", label: "Cờ bật lên: người duyệt đã nhận đề nghị" },
-    { mark: "raised", label: "Đồng xu: đề nghị chi, càng nhiều tiền càng to; lỗ tròn: hạn mức của từng người duyệt" },
+    { mark: "lit", label: "Cờ bật lên ở người duyệt vừa nhận đề nghị" },
+    { mark: "raised", label: "Đồng xu là đề nghị chi, càng nhiều tiền càng to, còn mỗi lỗ tròn là hạn mức của một người duyệt" },
   ],
   caption:
-    "Ba lỗ trên máng xếp theo đúng thứ tự của chuỗi duyệt, lỗ sau to hơn lỗ trước. Đồng xu chỉ được đưa vào đầu máng, như client chỉ gọi người duyệt đầu tiên. Đến mỗi lỗ, hoặc nó lọt xuống (người đó duyệt và chuỗi dừng ở đó), hoặc nó to hơn lỗ và trượt sang lỗ kế tiếp. Không lỗ nào giữ được thì nó rơi khỏi cuối máng: hết chuỗi, đề nghị bị từ chối. Thêm một cấp duyệt chỉ là khoan thêm một lỗ.",
-  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Chain of Responsibility: phím mũi tên để chọn một trong bốn đề nghị chi" aria-valuemin="1" aria-valuemax="${REQUESTS.length}" aria-valuenow="${START + 1}">${svg}</div>`,
-}), stepsHtml({ label: "Các bước: chọn đề nghị chi", steps, start: START }));
+    "Ba lỗ trên máng xếp đúng thứ tự của chuỗi duyệt, lỗ sau to hơn lỗ trước, và đồng xu chỉ được thả vào ở đầu máng, giống như client chỉ gọi người duyệt đầu tiên. Tới mỗi lỗ, đồng xu hoặc lọt xuống để người đó duyệt và chuỗi dừng lại, hoặc to hơn lỗ nên trượt sang lỗ kế tiếp. Không lỗ nào giữ được thì nó rơi khỏi cuối máng và đề nghị bị từ chối, còn muốn thêm một cấp duyệt thì chỉ cần khoan thêm một lỗ.",
+  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Máy phân loại đồng xu, dùng phím mũi tên để chọn một trong bốn đề nghị chi" aria-valuemin="1" aria-valuemax="${REQUESTS.length}" aria-valuenow="${START + 1}">${svg}</div>`,
+}), stepsHtml({ label: "Chọn đề nghị chi", steps, start: START }));
 
 export const FIGURE_CSS = `
 .dp-bore{fill:var(--anatomy-shade-1)}

@@ -12,7 +12,7 @@ import { fileURLToPath } from "node:url";
 import * as k from "/home/tuanpham/.claude/skills/anatomy/kit/iso-kit.mjs";
 import { kitScript } from "/home/tuanpham/.claude/skills/anatomy/scripts/inline-kit.mjs";
 import { stepsHtml, withSteps } from "../_shared/page.mjs";
-import { exportReport, FORMATS, groupVND, ORDERS } from "./model.mjs";
+import { exportReport, FORMATS, groupVND, ORDERS, say } from "./model.mjs";
 import * as M from "./parts.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -371,7 +371,7 @@ export const svg = k.figureSvg({
   width: WIDTH,
   height: HEIGHT,
   label:
-    "Một máy bàn xoay chia độ. Bàn xoay mang một khay thanh dữ liệu lần lượt qua bốn trạm bắt cố định trên đế theo một thứ tự không đổi: phễu cấp sáu đơn hàng, tay gắp nhấc các đơn bị huỷ bỏ vào thùng, máy ép định dạng, và tay gắp ghi kết quả vào hộp cùng bộ đếm số dòng. Chỉ trạm định dạng lắp một khuôn lấy từ giá bên cạnh: mỗi khuôn là một lớp con (CSV, JSON Lines, fixed-width), có thêm hộp nhãn ở đầu nếu định dạng đó có header hoặc footer.",
+    "Hình vẽ một máy bàn xoay chia độ. Bàn xoay mang một khay thanh dữ liệu lần lượt đi qua bốn trạm bắt cố định trên đế theo một thứ tự không đổi. Đầu tiên phễu cấp sáu đơn hàng, sau đó tay gắp nhấc các đơn bị huỷ bỏ vào thùng, tiếp theo máy ép định dạng từng dòng, và cuối cùng tay gắp ghi kết quả vào hộp, bên cạnh có bộ đếm số dòng. Chỉ riêng trạm định dạng lắp một khuôn lấy từ giá bên cạnh. Mỗi khuôn là một lớp con CSV, JSON Lines hoặc fixed-width, và có thêm hộp nhãn ở đầu nếu định dạng đó cần header hoặc footer.",
   body: [
     base(),
     housing(),
@@ -471,7 +471,7 @@ function diePath(i, p) {
 function describe() {
   const report = REPORTS[sel];
   stage.setAttribute("aria-valuenow", String(sel + 1));
-  stage.setAttribute("aria-valuetext", FORMATS[sel].cls + ": đọc " + report.read + " đơn, bỏ " + report.dropped + " đơn huỷ, ghi " + report.lines.length + " dòng vào " + report.file);
+  stage.setAttribute("aria-valuetext", "Lớp " + FORMATS[sel].cls + " đọc " + report.read + " đơn, bỏ " + report.dropped + " đơn huỷ rồi ghi " + report.lines.length + " dòng vào " + report.file + ".");
   emit();
 }
 const emit = () => stage.dispatchEvent(new CustomEvent("dp:state", { detail: { index: sel, touring } }));
@@ -600,12 +600,15 @@ draw();
 
 const steps = FORMATS.map((format, i) => {
   const report = exportReport(format);
-  const hooks = [format.header && "<code>header</code>", format.footer && "<code>footer</code>"].filter(Boolean);
-  const extra = hooks.length ? ` và hook ${hooks.join(", ")}` : ", không cần hook nào";
+  const hooks = format.header && format.footer ? "thêm một dòng header lẫn một dòng footer"
+    : format.header ? "thêm một dòng header"
+    : format.footer ? "thêm một dòng footer"
+    : "không cần dòng header hay footer nào";
+  const sample = esc(report.lines[report.header ? 1 : 0]).replace(/  /g, "&nbsp;&nbsp;");
   return {
     label: format.label,
     short: format.short,
-    caption: `<code>${format.cls}</code> chỉ viết <code>format_row</code>${extra}: <code>${esc(report.lines[report.header ? 1 : 0]).replace(/  /g, "&nbsp;&nbsp;")}</code>. Khung <code>export()</code> vẫn đọc ${report.read} đơn, bỏ ${report.dropped} đơn huỷ, ghi <strong>${report.lines.length} dòng</strong> vào <code>${report.file}</code>.`,
+    caption: `Khuôn ${format.label} chỉ quy định cách viết một dòng, chẳng hạn <code>${sample}</code>, và ${hooks}. Phần còn lại do khung chung lo, nên máy vẫn đọc ${say(report.read)} đơn, bỏ ${say(report.dropped)} đơn huỷ và ghi <strong>${report.lines.length} dòng</strong> vào ${report.file}.`,
   };
 });
 function esc(text) {
@@ -619,13 +622,13 @@ export const plate = withSteps(k.plateHtml({
   hint: "Rê chuột để chọn định dạng",
   readout: `${first.file} · ${first.lines.length} dòng`,
   keys: [
-    { mark: "lit", label: "Khuôn đang lắp ở trạm định dạng: phần duy nhất lớp con viết" },
-    { mark: "raised", label: "Bàn xoay và ba trạm còn lại: khung export() dùng chung, thứ tự không đổi" },
+    { mark: "lit", label: "Khuôn đang lắp ở trạm định dạng, phần duy nhất do lớp con viết" },
+    { mark: "raised", label: "Bàn xoay và ba trạm còn lại là khung export() dùng chung, thứ tự không bao giờ đổi" },
   ],
   caption:
-    `Bàn xoay luôn đưa khay qua bốn trạm theo đúng một thứ tự: cấp ${ORDERS.length} đơn, lọc đơn huỷ, định dạng, ghi file. Đổi định dạng chỉ là đổi khuôn ở trạm thứ ba; khuôn nào có hộp nhãn ở đầu thì thêm dòng header hoặc footer, còn bộ đếm ở trạm ghi đếm số dòng của file. Tổng tiền của cả ba file vẫn là ${groupVND(first.total)} ₫.`,
-  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Template Method: phím mũi tên để chọn định dạng CSV, JSON Lines hoặc fixed-width" aria-valuemin="1" aria-valuemax="3" aria-valuenow="${START + 1}">${svg}</div>`,
-}), stepsHtml({ label: "Các bước: chọn định dạng", steps, start: START }));
+    `Bàn xoay luôn đưa khay qua bốn trạm theo đúng một thứ tự là cấp ${say(ORDERS.length)} đơn, lọc đơn huỷ, định dạng rồi ghi file. Đổi định dạng chỉ là đổi khuôn ở trạm thứ ba, khuôn nào có hộp nhãn ở đầu thì thêm dòng header hoặc footer, còn bộ đếm ở trạm ghi cho biết file có bao nhiêu dòng. Dù lắp khuôn nào, tổng tiền của cả ba file vẫn là ${groupVND(first.total)} ₫.`,
+  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Hình Template Method, dùng phím mũi tên để chọn định dạng CSV, JSON Lines hoặc fixed-width" aria-valuemin="1" aria-valuemax="3" aria-valuenow="${START + 1}">${svg}</div>`,
+}), stepsHtml({ label: "Các bước chọn định dạng", steps, start: START }));
 
 export const FIGURE_CSS = `
 .tm-hole{fill:var(--anatomy-shade-0)}

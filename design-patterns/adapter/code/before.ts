@@ -14,7 +14,7 @@ function importRows(bank: string, rows: Row[]) {
       case "C":
         return { amount: Math.round(Number(row.txnAmt)), reference: row.narrative, bookedAt: new Date(row.valueDate).toISOString() };
       default:
-        throw new Error(`Chưa hỗ trợ ngân hàng ${bank}`); // thêm ngân hàng = sửa hàm này
+        throw new Error(`Chưa hỗ trợ ngân hàng ${bank}`); // mỗi ngân hàng mới lại phải sửa hàm này
     }
   });
 }

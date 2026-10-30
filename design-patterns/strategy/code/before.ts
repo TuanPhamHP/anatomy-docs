@@ -10,7 +10,7 @@ function shippingFee(rule: string, order: Order): number {
     case "free_over_300k":
       return order.subtotal >= 300000 ? 0 : 20000;
     default:
-      throw new Error(`Chưa hỗ trợ cách tính ${rule}`); // thêm cách tính = sửa hàm này
+      throw new Error(`Chưa hỗ trợ cách tính ${rule}`); // thêm cách tính nào cũng phải sửa hàm này
   }
 }
 

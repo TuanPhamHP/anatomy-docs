@@ -26,7 +26,7 @@ class Approver {
   handle(request: Expense): string {
     if (this.canApprove(request)) return `${this.role} duyệt`;
     if (this.next === null) return "bị từ chối: vượt mọi hạn mức"; // hết chuỗi mà không ai nhận
-    return this.next.handle(request); // không đủ thẩm quyền: chuyển tiếp
+    return this.next.handle(request); // không đủ thẩm quyền thì chuyển tiếp
   }
 
   protected canApprove(request: Expense): boolean {
@@ -44,9 +44,9 @@ const vnd = (n: number) => n.toLocaleString("vi-VN");
 
 const chain = buildChain();
 const requests: Expense[] = [
-  { id: "CP-101", amount: 3_000_000, purpose: "văn phòng phẩm quý 4" },
-  { id: "CP-102", amount: 20_000_000, purpose: "laptop cho nhân viên mới" },
-  { id: "CP-103", amount: 120_000_000, purpose: "hội nghị khách hàng" },
+  { id: "CP-101", amount: 3_000_000, purpose: "mua văn phòng phẩm quý 4" },
+  { id: "CP-102", amount: 20_000_000, purpose: "mua laptop cho nhân viên mới" },
+  { id: "CP-103", amount: 120_000_000, purpose: "tổ chức hội nghị khách hàng" },
   { id: "CP-104", amount: 900_000_000, purpose: "mở văn phòng mới" },
 ];
 for (const r of requests) {
