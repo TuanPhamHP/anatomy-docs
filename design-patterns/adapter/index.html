@@ -143,7 +143,10 @@ body{margin:0;background:var(--anatomy-page);color:var(--anatomy-text);font:14px
 .dp-file span{color:var(--anatomy-muted)}
 .dp-panel pre,.dp-output{margin:0;padding:14px 16px;overflow-x:auto;font:13px/1.6 var(--anatomy-mono);color:var(--anatomy-strong);tab-size:2}
 .dp-panel pre code,.dp-output code{font:inherit}
-.dp-panel pre,.dp-output,.dp-article code{font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0}
+/* After every font shorthand, which resets ligatures: JetBrains Mono would draw -> and => as arrows. */
+.dp-panel pre,.dp-output,.dp-article code,.dp-article :not(pre)>code{font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0}
+/* Its own layer gives the drawing's text greyscale antialiasing, so captured previews have no colour fringes. */
+.iso-stage svg{will-change:transform}
 .dp-output{margin:0 0 16px;border:1px solid var(--anatomy-faint);border-radius:6px;background:transparent;color:var(--anatomy-text)}
 .dp-note{margin:8px 0 0;font-size:13.5px;color:var(--anatomy-muted)}
 .hl-c{color:#8c8c90;font-style:italic}

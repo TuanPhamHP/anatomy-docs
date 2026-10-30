@@ -71,7 +71,7 @@ footer a { color: var(--text); }
       <h1>Design patterns</h1>
       <p>23 pattern kinh điển của nhóm Gang of Four, chia ba nhóm theo việc chúng giải quyết. Mỗi bài là một cỗ máy tương tác mà cách nó chạy chính là pattern, kèm một bài toán backend quen thuộc, phiên bản code trước và sau khi áp dụng, viết bằng Python và TypeScript, chạy được.</p>
       <ul class="progress">
-        <li><strong>1</strong> / 14 bài của đợt 1 đã có</li>
+        <li><strong>7</strong> / 14 bài của đợt 1 đã có</li>
         <li><span class="stars" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span> hay gặp trong backend</li>
         <li><span class="stars" aria-label="Mức phổ biến 1 trên 3">★<span class="off">★★</span></span> ít gặp</li>
       </ul>
@@ -127,25 +127,49 @@ footer a { color: var(--text); }
   </section><section id="behavioral" aria-labelledby="behavioral-title">
     <h2 id="behavioral-title">Behavioral <span>Phối hợp giữa các object</span></h2>
     <p class="blurb">Chia trách nhiệm và cách các object gọi nhau, để thêm hành vi mà không sửa phần đang chạy.</p>
-    <ul class="cards"><li class="card planned">
-      <div class="head"><span class="name">Strategy</span><span class="stars" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span></div>
-      <p>Đổi thuật toán lúc chạy: cách tính phí, cách xử lý từng loại sự kiện.</p>
-      <span class="status">Đợt 1 · sắp có</span></li><li class="card planned">
-      <div class="head"><span class="name">Observer</span><span class="stars" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span></div>
-      <p>Một bên phát sự kiện, nhiều bên nghe mà không cần biết nhau.</p>
-      <span class="status">Đợt 1 · sắp có</span></li><li class="card planned">
-      <div class="head"><span class="name">Chain of Responsibility</span><span class="stars" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span></div>
-      <p>Chuỗi mắt xử lý; mỗi mắt quyết định cho đi tiếp hay dừng, như middleware.</p>
-      <span class="status">Đợt 1 · sắp có</span></li><li class="card planned">
-      <div class="head"><span class="name">Command</span><span class="stars" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span></div>
-      <p>Gói yêu cầu thành object để xếp hàng, retry hoặc hoàn tác, như job trong queue.</p>
-      <span class="status">Đợt 1 · sắp có</span></li><li class="card planned">
-      <div class="head"><span class="name">State</span><span class="stars" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span></div>
-      <p>Hành vi đổi theo trạng thái hiện tại: luồng phê duyệt, vòng đời đơn hàng.</p>
-      <span class="status">Đợt 1 · sắp có</span></li><li class="card planned">
-      <div class="head"><span class="name">Template Method</span><span class="stars" aria-label="Mức phổ biến 2 trên 3">★★<span class="off">★</span></span></div>
-      <p>Khung thuật toán cố định, chỉ vài bước được thay.</p>
-      <span class="status">Đợt 1 · sắp có</span></li><li class="card planned">
+    <ul class="cards"><li class="card ready"><a href="./strategy/">
+      <div class="plate">
+        <span class="corner title">Strategy</span>
+        <img src="./strategy/preview.png" alt="Hình tương tác của Strategy" loading="lazy" width="1086" height="659">
+        <span class="corner hint">Mở bài</span>
+        <span class="corner readout"><span class="stars" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span></span>
+      </div></a>
+      <p>Đổi thuật toán lúc chạy: cách tính phí, cách xử lý từng loại sự kiện.</p></li><li class="card ready"><a href="./observer/">
+      <div class="plate">
+        <span class="corner title">Observer</span>
+        <img src="./observer/preview.png" alt="Hình tương tác của Observer" loading="lazy" width="1086" height="659">
+        <span class="corner hint">Mở bài</span>
+        <span class="corner readout"><span class="stars" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span></span>
+      </div></a>
+      <p>Một bên phát sự kiện, nhiều bên nghe mà không cần biết nhau.</p></li><li class="card ready"><a href="./chain-of-responsibility/">
+      <div class="plate">
+        <span class="corner title">Chain of Responsibility</span>
+        <img src="./chain-of-responsibility/preview.png" alt="Hình tương tác của Chain of Responsibility" loading="lazy" width="1086" height="729">
+        <span class="corner hint">Mở bài</span>
+        <span class="corner readout"><span class="stars" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span></span>
+      </div></a>
+      <p>Chuỗi mắt xử lý; mỗi mắt quyết định cho đi tiếp hay dừng, như middleware.</p></li><li class="card ready"><a href="./command/">
+      <div class="plate">
+        <span class="corner title">Command</span>
+        <img src="./command/preview.png" alt="Hình tương tác của Command" loading="lazy" width="1086" height="729">
+        <span class="corner hint">Mở bài</span>
+        <span class="corner readout"><span class="stars" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span></span>
+      </div></a>
+      <p>Gói yêu cầu thành object để xếp hàng, retry hoặc hoàn tác, như job trong queue.</p></li><li class="card ready"><a href="./state/">
+      <div class="plate">
+        <span class="corner title">State</span>
+        <img src="./state/preview.png" alt="Hình tương tác của State" loading="lazy" width="1086" height="729">
+        <span class="corner hint">Mở bài</span>
+        <span class="corner readout"><span class="stars" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span></span>
+      </div></a>
+      <p>Hành vi đổi theo trạng thái hiện tại: luồng phê duyệt, vòng đời đơn hàng.</p></li><li class="card ready"><a href="./template-method/">
+      <div class="plate">
+        <span class="corner title">Template Method</span>
+        <img src="./template-method/preview.png" alt="Hình tương tác của Template Method" loading="lazy" width="1086" height="729">
+        <span class="corner hint">Mở bài</span>
+        <span class="corner readout"><span class="stars" aria-label="Mức phổ biến 2 trên 3">★★<span class="off">★</span></span></span>
+      </div></a>
+      <p>Khung thuật toán cố định, chỉ vài bước được thay.</p></li><li class="card planned">
       <div class="head"><span class="name">Iterator</span><span class="stars" aria-label="Mức phổ biến 2 trên 3">★★<span class="off">★</span></span></div>
       <p>Duyệt một tập hợp mà không lộ cấu trúc bên trong.</p>
       <span class="status">Đợt 2</span></li><li class="card planned">
