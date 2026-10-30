@@ -31,10 +31,10 @@ export const PATTERNS = [
   { slug: "prototype", name: "Prototype", group: "creational", stars: 1, wave: 2, summary: "Tạo object mới bằng cách clone một mẫu có sẵn." },
 
   { slug: "adapter", name: "Adapter", group: "structural", stars: 3, wave: 1, ready: true, summary: "Bọc một interface lạ thành interface hệ thống đang chờ: nhiều ngân hàng, một chuẩn giao dịch." },
-  { slug: "decorator", name: "Decorator", group: "structural", stars: 3, wave: 1, summary: "Bọc thêm hành vi (cache, log, retry) mà không sửa lớp gốc." },
-  { slug: "facade", name: "Facade", group: "structural", stars: 3, wave: 1, summary: "Một cửa đơn giản che cả một hệ con phức tạp." },
-  { slug: "proxy", name: "Proxy", group: "structural", stars: 2, wave: 1, summary: "Đứng thay object thật để tải lười, cache hoặc kiểm quyền." },
-  { slug: "composite", name: "Composite", group: "structural", stars: 2, wave: 1, summary: "Cây bộ phận và tổng thể được xử lý như nhau: task, phase, project." },
+  { slug: "decorator", name: "Decorator", group: "structural", stars: 3, wave: 1, ready: true, summary: "Bọc thêm hành vi (cache, log, retry) mà không sửa lớp gốc." },
+  { slug: "facade", name: "Facade", group: "structural", stars: 3, wave: 1, ready: true, summary: "Một cửa đơn giản che cả một hệ con phức tạp." },
+  { slug: "proxy", name: "Proxy", group: "structural", stars: 2, wave: 1, ready: true, summary: "Đứng thay object thật để tải lười, cache hoặc kiểm quyền." },
+  { slug: "composite", name: "Composite", group: "structural", stars: 2, wave: 1, ready: true, summary: "Cây bộ phận và tổng thể được xử lý như nhau: task, phase, project." },
   { slug: "bridge", name: "Bridge", group: "structural", stars: 1, wave: 2, summary: "Tách hai chiều biến đổi độc lập, như kênh gửi và loại thông báo." },
   { slug: "flyweight", name: "Flyweight", group: "structural", stars: 1, wave: 2, summary: "Dùng chung phần dữ liệu bất biến để tiết kiệm bộ nhớ." },
 

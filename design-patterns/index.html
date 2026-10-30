@@ -71,7 +71,7 @@ footer a { color: var(--text); }
       <h1>Design patterns</h1>
       <p>23 pattern kinh điển của nhóm Gang of Four, chia ba nhóm theo việc chúng giải quyết. Mỗi bài là một cỗ máy tương tác mà cách nó chạy chính là pattern, kèm một bài toán backend quen thuộc, phiên bản code trước và sau khi áp dụng, viết bằng Python và TypeScript, chạy được.</p>
       <ul class="progress">
-        <li><strong>7</strong> / 14 bài của đợt 1 đã có</li>
+        <li><strong>11</strong> / 14 bài của đợt 1 đã có</li>
         <li><span class="stars" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span> hay gặp trong backend</li>
         <li><span class="stars" aria-label="Mức phổ biến 1 trên 3">★<span class="off">★★</span></span> ít gặp</li>
       </ul>
@@ -105,19 +105,35 @@ footer a { color: var(--text); }
         <span class="corner hint">Mở bài</span>
         <span class="corner readout"><span class="stars" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span></span>
       </div></a>
-      <p>Bọc một interface lạ thành interface hệ thống đang chờ: nhiều ngân hàng, một chuẩn giao dịch.</p></li><li class="card planned">
-      <div class="head"><span class="name">Decorator</span><span class="stars" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span></div>
-      <p>Bọc thêm hành vi (cache, log, retry) mà không sửa lớp gốc.</p>
-      <span class="status">Đợt 1 · sắp có</span></li><li class="card planned">
-      <div class="head"><span class="name">Facade</span><span class="stars" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span></div>
-      <p>Một cửa đơn giản che cả một hệ con phức tạp.</p>
-      <span class="status">Đợt 1 · sắp có</span></li><li class="card planned">
-      <div class="head"><span class="name">Proxy</span><span class="stars" aria-label="Mức phổ biến 2 trên 3">★★<span class="off">★</span></span></div>
-      <p>Đứng thay object thật để tải lười, cache hoặc kiểm quyền.</p>
-      <span class="status">Đợt 1 · sắp có</span></li><li class="card planned">
-      <div class="head"><span class="name">Composite</span><span class="stars" aria-label="Mức phổ biến 2 trên 3">★★<span class="off">★</span></span></div>
-      <p>Cây bộ phận và tổng thể được xử lý như nhau: task, phase, project.</p>
-      <span class="status">Đợt 1 · sắp có</span></li><li class="card planned">
+      <p>Bọc một interface lạ thành interface hệ thống đang chờ: nhiều ngân hàng, một chuẩn giao dịch.</p></li><li class="card ready"><a href="./decorator/">
+      <div class="plate">
+        <span class="corner title">Decorator</span>
+        <img src="./decorator/preview.png" alt="Hình tương tác của Decorator" loading="lazy" width="1086" height="908">
+        <span class="corner hint">Mở bài</span>
+        <span class="corner readout"><span class="stars" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span></span>
+      </div></a>
+      <p>Bọc thêm hành vi (cache, log, retry) mà không sửa lớp gốc.</p></li><li class="card ready"><a href="./facade/">
+      <div class="plate">
+        <span class="corner title">Facade</span>
+        <img src="./facade/preview.png" alt="Hình tương tác của Facade" loading="lazy" width="1086" height="693">
+        <span class="corner hint">Mở bài</span>
+        <span class="corner readout"><span class="stars" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span></span>
+      </div></a>
+      <p>Một cửa đơn giản che cả một hệ con phức tạp.</p></li><li class="card ready"><a href="./proxy/">
+      <div class="plate">
+        <span class="corner title">Proxy</span>
+        <img src="./proxy/preview.png" alt="Hình tương tác của Proxy" loading="lazy" width="1086" height="693">
+        <span class="corner hint">Mở bài</span>
+        <span class="corner readout"><span class="stars" aria-label="Mức phổ biến 2 trên 3">★★<span class="off">★</span></span></span>
+      </div></a>
+      <p>Đứng thay object thật để tải lười, cache hoặc kiểm quyền.</p></li><li class="card ready"><a href="./composite/">
+      <div class="plate">
+        <span class="corner title">Composite</span>
+        <img src="./composite/preview.png" alt="Hình tương tác của Composite" loading="lazy" width="1086" height="623">
+        <span class="corner hint">Mở bài</span>
+        <span class="corner readout"><span class="stars" aria-label="Mức phổ biến 2 trên 3">★★<span class="off">★</span></span></span>
+      </div></a>
+      <p>Cây bộ phận và tổng thể được xử lý như nhau: task, phase, project.</p></li><li class="card planned">
       <div class="head"><span class="name">Bridge</span><span class="stars" aria-label="Mức phổ biến 1 trên 3">★<span class="off">★★</span></span></div>
       <p>Tách hai chiều biến đổi độc lập, như kênh gửi và loại thông báo.</p>
       <span class="status">Đợt 2</span></li><li class="card planned">
