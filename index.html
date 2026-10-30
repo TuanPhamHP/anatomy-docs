@@ -234,6 +234,18 @@ footer a { color: var(--text); }
     <section id="figures" aria-labelledby="figures-title">
       <h2 id="figures-title">Các hình <span class="count" id="figure-count"></span></h2>
       <ol class="figures">
+        <li>
+          <a href="./design-patterns/">
+            <div class="plate">
+              <span class="corner fig">Fig 1</span>
+              <span class="corner title">Design patterns</span>
+              <img src="./design-patterns/adapter/preview.png" alt="Máy đối soát với ba khối chuyển đổi cắm vào một ổ chuẩn: hình của bài Adapter" loading="lazy" width="1086" height="729">
+              <span class="corner hint">Mở module</span>
+              <span class="corner readout">1 / 14 bài</span>
+            </div>
+          </a>
+          <p>23 design pattern chia ba nhóm Creational, Structural, Behavioral. Mỗi bài là một cỗ máy tương tác kèm bài toán backend và code Python, TypeScript.</p>
+        </li>
         <!--
           Mỗi hình là một <li>, xếp theo thứ tự tạo (Fig 1, Fig 2, ...). Mẫu:
           <li>
@@ -285,7 +297,7 @@ footer a { color: var(--text); }
   (function () {
     var n = document.querySelectorAll(".figures > li").length;
     document.getElementById("figure-count").textContent = n ? String(n).padStart(2, "0") : "";
-    document.getElementById("hero-count").textContent = n + " hình";
+    document.getElementById("hero-count").textContent = n + " mục";
   })();
 </script>
 </body>
