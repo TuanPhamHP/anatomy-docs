@@ -150,7 +150,7 @@ footer a { color: var(--text); }
       <p class="eyebrow">Module</p>
       <h1>Design patterns</h1>
       <p>Các pattern kinh điển của nhóm Gang of Four, chia thành ba nhóm theo loại vấn đề chúng giải quyết. Mỗi bài mở đầu bằng một cỗ máy nhỏ, và cách cỗ máy chạy cũng chính là cách pattern vận hành. Tiếp theo là một bài toán backend quen thuộc, với code Python và TypeScript trước và sau khi áp dụng pattern, chạy được ngay.</p>
-      <p>Hiện đã có ${ready.length} bài, đủ những pattern hay gặp nhất. ${WORDS[later] ?? later} pattern còn lại sẽ có ở đợt sau.</p>
+      <p>${later ? `Hiện đã có ${ready.length} bài, đủ những pattern hay gặp nhất. ${WORDS[later] ?? later} pattern còn lại sẽ có ở đợt sau.` : `Đã có đủ ${ready.length} bài, từ những pattern gặp hằng ngày tới những pattern ít dùng hơn. Mỗi bài kết thúc bằng vài câu hỏi ngắn để bạn tự kiểm tra.`}</p>
       <ul class="legend">
         <li>${stars(3)} rất hay gặp trong backend</li>
         <li>${stars(1)} ít gặp hơn</li>

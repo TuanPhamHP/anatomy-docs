@@ -101,7 +101,7 @@ footer a { color: var(--text); }
       <p class="eyebrow">Module</p>
       <h1>Design patterns</h1>
       <p>Các pattern kinh điển của nhóm Gang of Four, chia thành ba nhóm theo loại vấn đề chúng giải quyết. Mỗi bài mở đầu bằng một cỗ máy nhỏ, và cách cỗ máy chạy cũng chính là cách pattern vận hành. Tiếp theo là một bài toán backend quen thuộc, với code Python và TypeScript trước và sau khi áp dụng pattern, chạy được ngay.</p>
-      <p>Hiện đã có 14 bài, đủ những pattern hay gặp nhất. Chín pattern còn lại sẽ có ở đợt sau.</p>
+      <p>Đã có đủ 23 bài, từ những pattern gặp hằng ngày tới những pattern ít dùng hơn. Mỗi bài kết thúc bằng vài câu hỏi ngắn để bạn tự kiểm tra.</p>
       <ul class="legend">
         <li><span class="stars" role="img" aria-label="Mức phổ biến 3 trên 3">★★★<span class="off"></span></span> rất hay gặp trong backend</li>
         <li><span class="stars" role="img" aria-label="Mức phổ biến 1 trên 3">★<span class="off">★★</span></span> ít gặp hơn</li>
@@ -110,7 +110,7 @@ footer a { color: var(--text); }
     <section id="creational" aria-labelledby="creational-title">
     <div class="group-head">
       <h2 id="creational-title">Creational <span>Tạo đối tượng</span></h2>
-      <p class="count">3 bài</p>
+      <p class="count">5 bài</p>
     </div>
     <p class="blurb">Nhóm này lo chuyện tạo đối tượng. Thay vì rải lệnh tạo đối tượng khắp nơi, ta gom việc đó về một chỗ, để sau này đổi cách tạo mà không phải sửa những đoạn code đang dùng nó.</p>
     <ul class="cards"><li class="card"><a href="./factory-method/">
@@ -134,13 +134,27 @@ footer a { color: var(--text); }
           <span class="summary">Bảo đảm cả chương trình chỉ có đúng một thể hiện. Pattern này dễ bị dùng sai, nên ngày nay thường để DI container lo.</span>
           <span class="go">Mở bài<span aria-hidden="true"> →</span></span>
         </span>
+      </a></li><li class="card"><a href="./abstract-factory/">
+        <span class="thumb"><img src="./abstract-factory/preview.png" alt="" loading="lazy" width="1086" height="801"></span>
+        <span class="body">
+          <span class="head"><span class="name">Abstract Factory</span><span class="stars" role="img" aria-label="Mức phổ biến 2 trên 3">★★<span class="off">★</span></span></span>
+          <span class="summary">Tạo cả một bộ đối tượng luôn đi cùng nhau, để chúng không bao giờ bị lắp lẫn bộ.</span>
+          <span class="go">Mở bài<span aria-hidden="true"> →</span></span>
+        </span>
+      </a></li><li class="card"><a href="./prototype/">
+        <span class="thumb"><img src="./prototype/preview.png" alt="" loading="lazy" width="1086" height="747"></span>
+        <span class="body">
+          <span class="head"><span class="name">Prototype</span><span class="stars" role="img" aria-label="Mức phổ biến 1 trên 3">★<span class="off">★★</span></span></span>
+          <span class="summary">Tạo đối tượng mới bằng cách sao chép một mẫu có sẵn thay vì dựng lại từ đầu.</span>
+          <span class="go">Mở bài<span aria-hidden="true"> →</span></span>
+        </span>
       </a></li></ul>
-    <div class="later"><p class="later-title">Sắp có</p><ul><li><span class="head"><span class="name">Abstract Factory</span><span class="stars" role="img" aria-label="Mức phổ biến 2 trên 3">★★<span class="off">★</span></span></span><span class="summary">Tạo cả một bộ đối tượng luôn đi cùng nhau, để chúng không bao giờ bị lắp lẫn bộ.</span></li><li><span class="head"><span class="name">Prototype</span><span class="stars" role="img" aria-label="Mức phổ biến 1 trên 3">★<span class="off">★★</span></span></span><span class="summary">Tạo đối tượng mới bằng cách sao chép một mẫu có sẵn thay vì dựng lại từ đầu.</span></li></ul></div>
+    
   </section>
     <section id="structural" aria-labelledby="structural-title">
     <div class="group-head">
       <h2 id="structural-title">Structural <span>Ghép đối tượng</span></h2>
-      <p class="count">5 bài</p>
+      <p class="count">7 bài</p>
     </div>
     <p class="blurb">Nhóm này bàn về cách ghép các lớp và đối tượng thành một cấu trúc lớn hơn, sao cho từng phần vẫn đơn giản và dễ thay thế.</p>
     <ul class="cards"><li class="card"><a href="./adapter/">
@@ -178,13 +192,27 @@ footer a { color: var(--text); }
           <span class="summary">Xử lý một món hàng lẻ và cả một thùng hàng nhiều tầng theo cùng một cách.</span>
           <span class="go">Mở bài<span aria-hidden="true"> →</span></span>
         </span>
+      </a></li><li class="card"><a href="./bridge/">
+        <span class="thumb"><img src="./bridge/preview.png" alt="" loading="lazy" width="1086" height="711"></span>
+        <span class="body">
+          <span class="head"><span class="name">Bridge</span><span class="stars" role="img" aria-label="Mức phổ biến 1 trên 3">★<span class="off">★★</span></span></span>
+          <span class="summary">Tách hai hướng thay đổi độc lập, chẳng hạn kênh gửi và loại thông báo, để số lớp không nhân lên theo cấp số.</span>
+          <span class="go">Mở bài<span aria-hidden="true"> →</span></span>
+        </span>
+      </a></li><li class="card"><a href="./flyweight/">
+        <span class="thumb"><img src="./flyweight/preview.png" alt="" loading="lazy" width="1086" height="729"></span>
+        <span class="body">
+          <span class="head"><span class="name">Flyweight</span><span class="stars" role="img" aria-label="Mức phổ biến 1 trên 3">★<span class="off">★★</span></span></span>
+          <span class="summary">Dùng chung phần dữ liệu không đổi giữa rất nhiều đối tượng để tiết kiệm bộ nhớ.</span>
+          <span class="go">Mở bài<span aria-hidden="true"> →</span></span>
+        </span>
       </a></li></ul>
-    <div class="later"><p class="later-title">Sắp có</p><ul><li><span class="head"><span class="name">Bridge</span><span class="stars" role="img" aria-label="Mức phổ biến 1 trên 3">★<span class="off">★★</span></span></span><span class="summary">Tách hai hướng thay đổi độc lập, chẳng hạn kênh gửi và loại thông báo, để số lớp không nhân lên theo cấp số.</span></li><li><span class="head"><span class="name">Flyweight</span><span class="stars" role="img" aria-label="Mức phổ biến 1 trên 3">★<span class="off">★★</span></span></span><span class="summary">Dùng chung phần dữ liệu không đổi giữa rất nhiều đối tượng để tiết kiệm bộ nhớ.</span></li></ul></div>
+    
   </section>
     <section id="behavioral" aria-labelledby="behavioral-title">
     <div class="group-head">
       <h2 id="behavioral-title">Behavioral <span>Phối hợp giữa các đối tượng</span></h2>
-      <p class="count">6 bài</p>
+      <p class="count">11 bài</p>
     </div>
     <p class="blurb">Nhóm này trả lời câu hỏi ai làm việc gì và các đối tượng trao đổi với nhau ra sao, để thêm được hành vi mới mà không phải động vào phần đang chạy ổn.</p>
     <ul class="cards"><li class="card"><a href="./strategy/">
@@ -229,8 +257,43 @@ footer a { color: var(--text); }
           <span class="summary">Giữ cố định trình tự các bước và chỉ cho lớp con thay vài bước bên trong.</span>
           <span class="go">Mở bài<span aria-hidden="true"> →</span></span>
         </span>
+      </a></li><li class="card"><a href="./iterator/">
+        <span class="thumb"><img src="./iterator/preview.png" alt="" loading="lazy" width="1086" height="693"></span>
+        <span class="body">
+          <span class="head"><span class="name">Iterator</span><span class="stars" role="img" aria-label="Mức phổ biến 2 trên 3">★★<span class="off">★</span></span></span>
+          <span class="summary">Duyệt qua một tập hợp mà không cần biết bên trong nó được lưu ra sao.</span>
+          <span class="go">Mở bài<span aria-hidden="true"> →</span></span>
+        </span>
+      </a></li><li class="card"><a href="./mediator/">
+        <span class="thumb"><img src="./mediator/preview.png" alt="" loading="lazy" width="1086" height="765"></span>
+        <span class="body">
+          <span class="head"><span class="name">Mediator</span><span class="stars" role="img" aria-label="Mức phổ biến 1 trên 3">★<span class="off">★★</span></span></span>
+          <span class="summary">Cho các bên trao đổi qua một trung gian thay vì gọi thẳng vào nhau.</span>
+          <span class="go">Mở bài<span aria-hidden="true"> →</span></span>
+        </span>
+      </a></li><li class="card"><a href="./memento/">
+        <span class="thumb"><img src="./memento/preview.png" alt="" loading="lazy" width="1086" height="729"></span>
+        <span class="body">
+          <span class="head"><span class="name">Memento</span><span class="stars" role="img" aria-label="Mức phổ biến 1 trên 3">★<span class="off">★★</span></span></span>
+          <span class="summary">Chụp lại trạng thái của một đối tượng để có thể khôi phục về sau.</span>
+          <span class="go">Mở bài<span aria-hidden="true"> →</span></span>
+        </span>
+      </a></li><li class="card"><a href="./interpreter/">
+        <span class="thumb"><img src="./interpreter/preview.png" alt="" loading="lazy" width="1086" height="854"></span>
+        <span class="body">
+          <span class="head"><span class="name">Interpreter</span><span class="stars" role="img" aria-label="Mức phổ biến 1 trên 3">★<span class="off">★★</span></span></span>
+          <span class="summary">Đánh giá một ngôn ngữ biểu thức nhỏ, chẳng hạn các điều kiện phân quyền.</span>
+          <span class="go">Mở bài<span aria-hidden="true"> →</span></span>
+        </span>
+      </a></li><li class="card"><a href="./visitor/">
+        <span class="thumb"><img src="./visitor/preview.png" alt="" loading="lazy" width="1086" height="623"></span>
+        <span class="body">
+          <span class="head"><span class="name">Visitor</span><span class="stars" role="img" aria-label="Mức phổ biến 1 trên 3">★<span class="off">★★</span></span></span>
+          <span class="summary">Thêm thao tác mới lên một cây đối tượng mà không phải sửa từng lớp trong cây.</span>
+          <span class="go">Mở bài<span aria-hidden="true"> →</span></span>
+        </span>
       </a></li></ul>
-    <div class="later"><p class="later-title">Sắp có</p><ul><li><span class="head"><span class="name">Iterator</span><span class="stars" role="img" aria-label="Mức phổ biến 2 trên 3">★★<span class="off">★</span></span></span><span class="summary">Duyệt qua một tập hợp mà không cần biết bên trong nó được lưu ra sao.</span></li><li><span class="head"><span class="name">Mediator</span><span class="stars" role="img" aria-label="Mức phổ biến 1 trên 3">★<span class="off">★★</span></span></span><span class="summary">Cho các bên trao đổi qua một trung gian thay vì gọi thẳng vào nhau.</span></li><li><span class="head"><span class="name">Memento</span><span class="stars" role="img" aria-label="Mức phổ biến 1 trên 3">★<span class="off">★★</span></span></span><span class="summary">Chụp lại trạng thái của một đối tượng để có thể khôi phục về sau.</span></li><li><span class="head"><span class="name">Interpreter</span><span class="stars" role="img" aria-label="Mức phổ biến 1 trên 3">★<span class="off">★★</span></span></span><span class="summary">Đánh giá một ngôn ngữ biểu thức nhỏ, chẳng hạn các điều kiện phân quyền.</span></li><li><span class="head"><span class="name">Visitor</span><span class="stars" role="img" aria-label="Mức phổ biến 1 trên 3">★<span class="off">★★</span></span></span><span class="summary">Thêm thao tác mới lên một cây đối tượng mà không phải sửa từng lớp trong cây.</span></li></ul></div>
+    
   </section>
   </main>
   <footer><a href="../">← Trang chủ</a><span>Vẽ bằng <a href="https://github.com/wheresryan22/anatomy">Anatomy</a></span></footer>

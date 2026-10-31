@@ -4,7 +4,7 @@
 
 import { readFileSync } from "node:fs";
 import * as k from "/home/tuanpham/.claude/skills/anatomy/kit/iso-kit.mjs";
-import { READING_ORDER } from "../catalog.mjs";
+import { GROUPS, PATTERNS } from "../catalog.mjs";
 
 const esc = (text) => String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
@@ -383,10 +383,13 @@ body{padding-bottom:calc(62px + env(safe-area-inset-bottom))}
 `;
 
 function pager(title) {
-  const at = READING_ORDER.findIndex((p) => p.name === title);
-  if (at < 0) throw new Error(`patternPage: "${title}" is not a ready pattern in catalog.mjs`);
-  const prev = READING_ORDER[at - 1];
-  const next = READING_ORDER[at + 1];
+  // The finished pages in module order, plus this one while it is still being
+  // built, so a page in progress gets its place before `ready` is set.
+  const order = GROUPS.flatMap((group) => PATTERNS.filter((p) => p.group === group.id && (p.ready || p.name === title)));
+  const at = order.findIndex((p) => p.name === title);
+  if (at < 0) throw new Error(`patternPage: "${title}" is not in catalog.mjs`);
+  const prev = order[at - 1];
+  const next = order[at + 1];
   const cards = `<nav class="dp-pager" aria-label="Bài trước và bài sau">${prev ? `<a class="prev" href="../${prev.slug}/" rel="prev"><span>← Bài trước</span><strong>${esc(prev.name)}</strong></a>` : ""}${next ? `<a class="next" href="../${next.slug}/" rel="next"><span>Bài sau →</span><strong>${esc(next.name)}</strong></a>` : ""}</nav>`;
   const side = (p, dir) => p
     ? `<a class="${dir}" href="../${p.slug}/" aria-label="${dir === "prev" ? "Bài trước" : "Bài sau"}: ${esc(p.name)}">${dir === "prev" ? ICONS.prev : ""}<span class="nm"><small>${dir === "prev" ? "Bài trước" : "Bài sau"}</small><b>${esc(p.name)}</b></span>${dir === "next" ? ICONS.next : ""}</a>`
